@@ -75,3 +75,4 @@ model Event {
   description String
   date        DateTime
 }
+
