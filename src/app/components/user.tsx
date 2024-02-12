@@ -2,8 +2,9 @@ import { getServerSession } from "next-auth";
 import Image from "next/image";
 import { LogoutButton } from "./LogoutButton";
 import React from 'react';
-import { authConfig } from "@/pages/api/auth/[...nextauth]";
-import { UserIcon } from '@heroicons/react/24/solid';
+import { authConfig } from "../../../pages/api/auth/[...nextauth]";
+// import { UserIcon } from '@heroicons/react/24/solid';
+import userIcon from "../../../public/images/blank-profile-picture.png"
 
 export const User = async () => {
     const session = await getServerSession(authConfig);
@@ -12,7 +13,7 @@ export const User = async () => {
         return null;
     }
 
-    const userImage = session.user.image ?? UserIcon; 
+    const userImage = session.user.image ?? userIcon; 
 
     return (
         <div>

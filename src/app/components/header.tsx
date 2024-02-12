@@ -9,7 +9,6 @@ export default async function Header() {
       <nav className="topnav">
         <Link href="/">Home</Link>
         <Link href="/discover">Discover</Link>
-        <Link href="/exhibitions">Exhibitions</Link>
         <Link href="/blog">Blog</Link>
         <Link href="/profile">Profile</Link>
       </nav>
