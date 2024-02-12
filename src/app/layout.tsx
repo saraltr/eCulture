@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Header from "./components/header";
 import Footer from "./components/footer";
-import { yeseva, dm_sans } from "./ui/fonts";
+import { dm_sans } from "./ui/fonts";
 
 export const metadata: Metadata = {
   title: {
