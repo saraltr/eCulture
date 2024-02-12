@@ -1,8 +1,9 @@
-import { User } from "./components/user";
+import Connection from "./components/connection";
 
 export default async function Home(){
     return (
-        <main>           
+        <main>  
+            <Connection></Connection>         
         </main>
 
     )

@@ -2,6 +2,7 @@ import { getServerSession } from "next-auth";
 import Image from "next/image";
 import { LogoutButton } from "./LogoutButton";
 import React from 'react';
+import { useUser } from '@auth0/nextjs-auth0/client';
 import { authConfig } from "../../../pages/api/auth/[...nextauth]";
 // import { UserIcon } from '@heroicons/react/24/solid';
 import userIcon from "../../../public/images/blank-profile-picture.png"
