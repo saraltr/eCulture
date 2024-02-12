@@ -47,6 +47,8 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
+  Profil        Profile[]
+  Article       Article[]
 
   @@map("users")
 }
@@ -61,18 +63,61 @@ model VerificationToken {
   @@map("verification_tokens")
 }
 
-model Exhibition {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+model Events {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
   name        String
   description String
   startDate   DateTime
   endDate     DateTime
+  category    Json[]
+  image       String
+  profil      Profile[]
+  Article     Article[]
+
+  @@map("events")
 }
 
-model Event {
+model Profile {
+  id       String    @id @default(auto()) @map("_id") @db.ObjectId
+  user     User      @relation(fields: [userId], references: [id])
+  comments Json[]
+  posts    Posts[]
+  article  Article[]
+
+  Events   Events? @relation(fields: [eventsId], references: [id])
+  eventsId String? @db.ObjectId
+  userId   String  @db.ObjectId
+
+  @@map("profile")
+}
+
+model Posts {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  name        String
+  image       String
   description String
-  date        DateTime
+  date        String
+  likes       Int?
+  createdAt   DateTime @default(now())
+  Profil      Profile? @relation(fields: [profilId], references: [id])
+  profilId    String?  @db.ObjectId
+
+  @@map("posts")
 }
 
+model Article {
+  id       String  @id @default(auto()) @map("_id") @db.ObjectId
+  user     User    @relation(fields: [userId], references: [id])
+  image    String
+  headline String
+  content  String
+  date     String
+  likes    Int?
+  event    Events? @relation(fields: [eventsId], references: [id])
+
+  Profil   Profile? @relation(fields: [profilId], references: [id])
+  profilId String?  @db.ObjectId
+  userId   String   @db.ObjectId
+  eventsId String?  @db.ObjectId
+
+  @@map("articles")
+}
