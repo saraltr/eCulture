@@ -7,6 +7,14 @@ export type Events = {
     startDate: DateTime
     endDate: DateTime
     image: string
+    content: string
+    comments: Comments[]
+}
+
+export type Comments = {
+  username: string
+  rating: number
+  comment: string
 }
 
 export type Profile = {
@@ -27,11 +35,19 @@ export type Users = {
 
 export type Posts = {
     id: string
+    userId: string
     image: string
     description: string
-    date: string
+    date: DateTime
     likes: number
 }
+
+export type PostData = {
+    userId: string
+    image: string
+    description: string
+    date: DateTime
+};
 
 export type Article = {
     id: string

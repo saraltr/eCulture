@@ -54,6 +54,24 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 });
                 res.status(200).json(createdEvent);
                 break;
+            case 'PUT' :
+                const { eventId } = req.query;
+                const { commentData } = req.body;
+                try {
+                    const updatedEvent = await prisma.events.update({
+                        where: {id: String(eventId)},
+                        data: {
+                        comments: {
+                            push: commentData,
+                        },
+                        }
+                    });
+                    res.status(200).json(updatedEvent);
+                    } catch (error) {
+                    console.error('Error updating product:', error);
+                    res.status(500).json({ message: 'Internal Server Error' });
+                }
+                break;
             default:
                 res.setHeader('Allow', ['GET', 'POST', 'DELETE', 'PUT']);
                 res.status(405).end(`Method ${req.method} Not Allowed`);

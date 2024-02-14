@@ -47,8 +47,8 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
-  Profil        Profile[]
-  Article       Article[]
+  Profile       Profile?  @relation(fields: [profileId], references: [id])
+  profileId     String?   @db.ObjectId
 
   @@map("users")
 }
@@ -64,29 +64,23 @@ model VerificationToken {
 }
 
 model Events {
-  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
   name        String
   description String
   startDate   DateTime
   endDate     DateTime
   category    Json[]
   image       String
-  profil      Profile[]
-  Article     Article[]
+  comments    Json[]
 
   @@map("events")
 }
 
 model Profile {
-  id       String    @id @default(auto()) @map("_id") @db.ObjectId
-  user     User      @relation(fields: [userId], references: [id])
-  comments Json[]
+  id       String  @id @default(auto()) @map("_id") @db.ObjectId
+  username String
   posts    Posts[]
-  article  Article[]
-
-  Events   Events? @relation(fields: [eventsId], references: [id])
-  eventsId String? @db.ObjectId
-  userId   String  @db.ObjectId
+  user     User[]
 
   @@map("profile")
 }
@@ -95,29 +89,28 @@ model Posts {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
   image       String
   description String
-  date        String
   likes       Int?
   createdAt   DateTime @default(now())
-  Profil      Profile? @relation(fields: [profilId], references: [id])
-  profilId    String?  @db.ObjectId
+  Profile     Profile? @relation(fields: [profileId], references: [id])
+  profileId   String?  @db.ObjectId
 
   @@map("posts")
 }
 
-model Article {
-  id       String  @id @default(auto()) @map("_id") @db.ObjectId
-  user     User    @relation(fields: [userId], references: [id])
-  image    String
-  headline String
-  content  String
-  date     String
-  likes    Int?
-  event    Events? @relation(fields: [eventsId], references: [id])
+// model Article {
+//   id       String  @id @default(auto()) @map("_id") @db.ObjectId
+//   user     User    @relation(fields: [userId], references: [id])
+//   image    String
+//   headline String
+//   content  String
+//   date     String
+//   likes    Int?
+//   event    Events? @relation(fields: [eventsId], references: [id])
 
-  Profil   Profile? @relation(fields: [profilId], references: [id])
-  profilId String?  @db.ObjectId
-  userId   String   @db.ObjectId
-  eventsId String?  @db.ObjectId
+//   Profil   Profile? @relation(fields: [profilId], references: [id])
+//   profilId String?  @db.ObjectId
+//   userId   String   @db.ObjectId
+//   eventsId String?  @db.ObjectId
 
-  @@map("articles")
-}
+//   @@map("articles")
+// }
