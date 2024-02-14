@@ -4,7 +4,7 @@ import { SessionProvider, useSession, signIn, signOut } from "next-auth/react";
 import { ArrowRightIcon } from '@heroicons/react/24/solid';
 import { useEffect } from "react";
 
-export default function Connection() {
+export function Connection() {
   return (
     <SessionProvider>
       <ConnectionContent />
@@ -17,7 +17,7 @@ function ConnectionContent() {
 
   useEffect(() => {
     const handleSignIn = async () => {
-      await signIn(undefined, { callbackUrl: '/profile' });
+      await signIn(undefined, { callbackUrl: "/profile" });
     };
 
     const handleClick = () => {
@@ -37,7 +37,7 @@ function ConnectionContent() {
   }, []);
 
   if (session) {
-    const userName = session.user?.name ?? 'User';
+    const userName = session.user?.name ?? "User";
 
     return (
       <div>
@@ -54,4 +54,63 @@ function ConnectionContent() {
       </button>
     </div>
   );
+}
+
+export function CheckConnection() {
+  return (
+    <SessionProvider>
+      <ConnectionBtn />
+    </SessionProvider>
+  );
+}
+
+function ConnectionBtn() {
+  const { data: session } = useSession();
+
+  useEffect(() => {
+    const handleSignIn = async () => {
+      await signIn(undefined, { callbackUrl: "/profile" });
+    };
+
+    const handleClick = () => {
+      handleSignIn();
+    };
+
+    const loginBtn = document.getElementById('loginBtn');
+
+    if (loginBtn) {
+      loginBtn.addEventListener('click', handleClick);
+
+      return () => {
+        loginBtn.removeEventListener('click', handleClick);
+      };
+    }
+
+  }, []);
+
+  const handleLogin = () => {
+    if (session) {
+      signOut();
+    } else {
+      signIn(undefined, { callbackUrl: "/profile" });
+    }
+  };
+
+  return (
+    <div>
+      <button id="loginBtn" onClick={handleLogin}>
+        {session ? "Logout" : "Login"}
+      </button>
+    </div>
+  );
+}
+
+export const LogoutButton = () => {
+    return(
+        <button onClick={
+            async () => {
+                await signOut({ callbackUrl: "/" })
+            }
+        } >Logout </button>
+    )
 }

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Header from "./components/header";
 import Footer from "./components/footer";
-import { dm_sans } from "./ui/fonts";
+import { dm_sans } from "./fonts/fonts";
 
 export const metadata: Metadata = {
   title: {
@@ -20,7 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={dm_sans.className}>
+      <body className={`${dm_sans.className} bg-white text-primary`}>
         <Header></Header>
         {children}
         <Footer></Footer>

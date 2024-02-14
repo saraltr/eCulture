@@ -1,19 +1,22 @@
 import { getServerSession } from "next-auth";
 import Image from "next/image";
-import { LogoutButton } from "./LogoutButton";
+import { LogoutButton } from "@/app/components/connection";
 import React from 'react';
-import { useUser } from '@auth0/nextjs-auth0/client';
 import { authConfig } from "../../../pages/api/auth/[...nextauth]";
 // import { UserIcon } from '@heroicons/react/24/solid';
 import userIcon from "../../../public/images/blank-profile-picture.png"
+import { NewPostForm } from "../components/posts"
 
 export const User = async () => {
     const session = await getServerSession(authConfig);
+
 
     if (!session?.user) {
         return null;
     }
 
+    const username = session.user.name ?? "anonyme"
+    const userIdentifier = session.user.email ?? ""
     const userImage = session.user.image ?? userIcon; 
 
     return (

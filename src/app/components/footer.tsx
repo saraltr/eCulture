@@ -3,7 +3,7 @@ import { FaceFrownIcon } from '@heroicons/react/24/solid';
 
 export default async function Footer() {
   return (
-    <footer>
+    <footer className="bg-primary text-neutral flex flex-col p-5 text-center">
       <div className="contact">
         <ul>
           <li><i className="fa-solid fa-hashtag"></i> Get in contact</li>

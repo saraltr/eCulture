@@ -5,11 +5,7 @@ import { formatDate } from "@/lib/utils";
 import React, { useState, useEffect } from 'react';
 import Link from "next/link";
 import { usePathname } from "next/navigation"
-import path from "path";
-
-interface Props {
-  eventId: string;
-}
+import CommentForm from "./comments";
 
 export function EventsList() {
     const [events, setEvents] = useState<Events[]>([]);
@@ -43,6 +39,7 @@ export function EventsList() {
                     </Link>
                     <p>Start Date: {formatDate(event.startDate)}</p>
                     <p>End Date: {formatDate(event.endDate)}</p>
+                    <p>{event.content}</p>
                 </div>
             ))}
         </>
@@ -52,7 +49,7 @@ export function EventsList() {
 export function EventDetail() {
     const [event, setEvent] = useState<Events | null>(null);
     const pathname = usePathname();
-    const eventId = pathname?.split("/").pop();
+    const eventId = pathname?.split("/").pop() ?? ""
 
     useEffect(() => {
         const fetchEvent = async () => {
@@ -65,7 +62,7 @@ export function EventDetail() {
         };
 
         fetchEvent();
-    }, [eventId]);
+    }, [eventId, event]);
 
     if (!event) {
         return <div>Loading Event...</div>;
@@ -73,10 +70,24 @@ export function EventDetail() {
 
     return (
         <div>
-            <h3>{event.name}</h3>
+            <h2>{event.name}</h2>
             <p>{event.description}</p>
             <p>Start Date: {formatDate(event.startDate)}</p>
             <p>End Date: {formatDate(event.endDate)}</p>
+            <p>{event.content}</p>
+            <div>
+                <h2>Comments</h2>
+                {event.comments.map((comment, index) => (
+                <div key={index}>
+                <p>Username: {comment.username}</p>
+                <p>Rating: {comment.rating}</p>
+                <p>{comment.comment}</p>
+                </div>
+                ))}
+            </div>
+            <div>
+                <CommentForm eventId={eventId}></CommentForm>
+            </div>
         </div>
     );
 }

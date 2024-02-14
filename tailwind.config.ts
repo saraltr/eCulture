@@ -2,18 +2,22 @@ import type { Config } from "tailwindcss";
 
 const config: Config = {
   content: [
-    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
     extend: {
-      backgroundImage: {
-        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-conic":
-          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+      fontFamily: {
+        headline: ['Kindora Bufferly', 'Georgia', 'serif'],
       },
+      colors: {
+          primary: "#973535",
+          secondary: "#4B1B1B", // darker red
+          accent: "#466286", // blue
+          neutral: "#F7F2EA",
+          "base-100": "#ffffff",
+       }
     },
   },
   plugins: [require('daisyui')],
