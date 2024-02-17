@@ -1,6 +1,6 @@
 "use client"
 import { getPosts } from "@/lib/data"
-import { Posts, PostData } from "@/lib/definitions";
+import { Posts } from "@/lib/definitions";
 import { formatDate } from "@/lib/utils";
 import React, { useState, useEffect, FormEvent } from 'react';
 
@@ -29,8 +29,6 @@ export function PostList() {
             {posts.map(post => (
                 <div key={post.id}>
                     <p>{post.description}</p>
-                    <p>{post.likes}</p>
-                    <p>Date: {formatDate(post.date)}</p>
                 </div>
             ))}
         </>
@@ -50,7 +48,7 @@ export const NewPostForm: React.FC<NewPostFormProps> = ({ userId }) => {
         const now = new Date();
         const datetime = now.toLocaleString();
         const date = datetime;
-        const postData: PostData = { userId, image, description, date };
+        const postData = { userId, image, description, date };
         console.log(postData);
         setImage("");
         setDescription("");
