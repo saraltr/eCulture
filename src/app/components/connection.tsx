@@ -98,7 +98,7 @@ function ConnectionBtn() {
 
   return (
     <div>
-      <button id="loginBtn" onClick={handleLogin}>
+      <button className="text-2xl" id="loginBtn" onClick={handleLogin}>
         {session ? "Logout" : "Login"}
       </button>
     </div>

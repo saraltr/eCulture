@@ -18,7 +18,7 @@ export function PostList() {
         };
 
         fetchEvents();
-    }, []);
+    }, [posts]);
 
     if (!posts) {
         return <div>Loading Posts...</div>;

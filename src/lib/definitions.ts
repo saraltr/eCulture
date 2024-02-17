@@ -1,27 +1,28 @@
-import { DateTime } from "next-auth/providers/kakao"
-
 export type Events = {
-    id: string
+    id: number
     name: string
     description: string
-    startDate: DateTime
-    endDate: DateTime
-    image: string
-    content: string
-    comments: Comments[]
-}
-
-export type Comments = {
-  username: string
-  rating: number
-  comment: string
-}
-
-export type Profile = {
-    id: string
     startDate: string
     endDate: string
     image: string
+    content: string
+    likes:  number
+    category: []
+    comments: Comments[];
+    registrations: Registration[];
+}
+
+export type Comments = {
+    id: number;
+    content: string;
+    eventId: number;
+    username: string;
+    createdAt: string;
+}
+
+export type Comment = {
+    content: string;
+    username: string;
 }
 
 export type Users = {
@@ -34,26 +35,15 @@ export type Users = {
 }
 
 export type Posts = {
-    id: string
-    userId: string
-    image: string
-    description: string
-    date: DateTime
-    likes: number
+  id: number;
+  image: string;
+  description: string;
+  createdAt: Date;
+  user: Users;
+  userId: number;
 }
 
-export type PostData = {
-    userId: string
-    image: string
-    description: string
-    date: DateTime
-};
-
-export type Article = {
-    id: string
-    image: string
-    headline: string
-    content: string
-    date: string
-    likes: number
+export type Registration = {
+  eventId: number;
+  participant: string;
 }

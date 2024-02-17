@@ -5,13 +5,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const prisma = new PrismaClient();
     try {
         switch (req.method) {
-
             case 'GET':
-                const { id } = req.query;
-                if (id) {
-                    const event = await prisma.events.findUnique({
+                // gets single event using its id
+                const { singleId } = req.query;
+                if (singleId) {
+                    const event = await prisma.event.findUnique({
                         where: {
-                            id: String(id)
+                            id: Number(singleId)
+                            
+                        }, 
+                        include: {
+                            comments: true,
                         }
                     });
                 if (event) {
@@ -20,7 +24,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     res.status(404).json({ error: 'Event not found' });
                 }
                 } else {
-                    const events = await prisma.events.findMany();
+                    // gets list of events
+                    const events = await prisma.event.findMany();
                     if  (events) {
                         res.status(200).json(events);
                     } else {
@@ -28,45 +33,54 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     }
                 }
                 break;
-            case 'POST':
-                const { name, description, startDate, endDate, image, category } = req.body.eventData;
-                if (!name) {
-                    return res.status(400).json({ error: 'Name is required' });
-                } if (!description) {
-                    return res.status(400).json({ error: 'Description is required' });
-                } if (!startDate) {
-                    return res.status(400).json({ error: 'StardDacte is required' });
-                } if (!image) {
-                    return res.status(400).json({ error: 'Image is required' });
-                } if (!category) {
-                     return res.status(400).json({ error: 'Category is required' });
-                }
-
-                const createdEvent = await prisma.events.create({
-                    data: {
-                        name: name,
-                        description: description,
-                        startDate: startDate,
-                        endDate: endDate,
-                        image: image,
-                        category: category,
-                    }
-                });
-                res.status(200).json(createdEvent);
-                break;
-            case 'PUT' :
+            case 'POST' :
                 const { eventId } = req.query;
-                const { commentData } = req.body;
+                const { commentData, registerStatus } = req.body;
                 try {
-                    const updatedEvent = await prisma.events.update({
-                        where: {id: String(eventId)},
+                    if (commentData){
+                        const updatedEvent = await prisma.comment.create({
                         data: {
-                        comments: {
-                            push: commentData,
+                        content: commentData.content,
+                        event: {
+                            connect: {
+                            id: Number(eventId)
+                            }
                         },
+                        profile: {
+                            connectOrCreate: {
+                            where: { username: commentData.username }, // check if profile with username exists
+                            create: { username: commentData.username } // if not create a new profile
+                            }
+                        }
                         }
                     });
+
                     res.status(200).json(updatedEvent);
+
+                    } else if (registerStatus) {
+                        const updatedRegistration = await prisma.registration.create({
+                           data: {
+                            event : {
+                                connect: {
+                                    id: Number(eventId)
+                                }
+                            },
+                            profile: {
+                                connectOrCreate: {
+                                    where: { username: registerStatus.participant
+                                    },
+                                    create: {
+                                        username: registerStatus.participant
+                                    }
+                                }
+                            }
+                           } 
+                        });
+
+                        res.status(200).json(updatedRegistration);
+
+                    }
+                    
                     } catch (error) {
                     console.error('Error updating product:', error);
                     res.status(500).json({ message: 'Internal Server Error' });

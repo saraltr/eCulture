@@ -9,7 +9,7 @@ export default async function Home(){
             <Banner
             banner1={banner1}
             banner2={banner2}
-            title="Welcome to Eculture!"
+            title="Welcome to Eculture"
             ></Banner>
             <Connection></Connection>         
         </main>

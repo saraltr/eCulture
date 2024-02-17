@@ -9,9 +9,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             case 'GET':
                 const { id } = req.query;
                 if (id) {
-                    const event = await prisma.events.findUnique({
+                    const event = await prisma.event.findUnique({
                         where: {
-                            id: String(id)
+                            id: Number(id)
                         }
                     });
                 if (event) {
@@ -20,7 +20,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     res.status(404).json({ error: 'Event not found' });
                 }
                 } else {
-                    const events = await prisma.posts.findMany();
+                    const events = await prisma.post.findMany();
                     if  (events) {
                         res.status(200).json(events);
                     } else {

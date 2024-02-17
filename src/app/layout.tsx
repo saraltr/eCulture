@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Provider from "./components/provider";
 import "./globals.css";
 import Header from "./components/header";
 import Footer from "./components/footer";
@@ -21,9 +22,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${dm_sans.className} bg-white text-primary`}>
+        <Provider>
         <Header></Header>
         {children}
         <Footer></Footer>
+        </Provider>
         </body>
     </html>
   );

@@ -5,14 +5,23 @@ generator client {
   provider = "prisma-client-js"
 }
 
+// neon online db
 datasource db {
-  provider = "mongodb"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
+// local postgres
+// datasource db {
+//   provider = "postgresql"
+//   url      = env("LOCAL_DB")
+// }
+
+// Account model
 model Account {
-  id                String  @id @default(cuid()) @map("_id")
-  userId            String  @db.ObjectId
+  id                Int     @id @default(autoincrement())
+  userId            Int
   type              String
   provider          String
   providerAccountId String
@@ -30,72 +39,114 @@ model Account {
 }
 
 model Session {
-  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  id           Int      @id @default(autoincrement())
   sessionToken String   @unique
-  userId       String   @db.ObjectId
+  userId       Int
   expires      DateTime @map("expiresAt")
   user         User     @relation(fields: [userId], references: [id])
-
-  @@map("sessions")
-}
-
-model User {
-  id            String    @id @default(auto()) @map("_id") @db.ObjectId
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
-  accounts      Account[]
-  sessions      Session[]
-  Profile       Profile?  @relation(fields: [profileId], references: [id])
-  profileId     String?   @db.ObjectId
-
-  @@map("users")
 }
 
 model VerificationToken {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  id         Int      @id @default(autoincrement())
   identifier String
   token      String   @unique
   expires    DateTime @map("expiresAt")
 
   @@unique([identifier, token])
-  @@map("verification_tokens")
 }
 
-model Events {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  name        String
-  description String
-  startDate   DateTime
-  endDate     DateTime
-  category    Json[]
-  image       String
-  comments    Json[]
-
-  @@map("events")
+model User {
+  id            Int       @id @default(autoincrement())
+  name          String    @unique
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
 }
 
 model Profile {
-  id       String  @id @default(auto()) @map("_id") @db.ObjectId
-  username String
-  posts    Posts[]
-  user     User[]
-
-  @@map("profile")
+  id            Int            @id @default(autoincrement())
+  username      String         @unique
+  comments      Comment[]
+  posts         Post[]
+  registrations Registration[]
 }
 
-model Posts {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+model Event {
+  id            Int            @id @default(autoincrement())
+  name          String
+  description   String
+  startDate     DateTime
+  endDate       DateTime
+  category      String[]
+  image         String
+  location      String
+  likes         Int?
+  comments      Comment[]
+  registrations Registration[]
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  content   String
+  event     Event    @relation(fields: [eventId], references: [id])
+  eventId   Int
+  profile   Profile  @relation(fields: [username], references: [username])
+  username  String
+  createdAt DateTime @default(now())
+}
+
+model Post {
+  id          Int      @id @default(autoincrement())
   image       String
   description String
-  likes       Int?
   createdAt   DateTime @default(now())
-  Profile     Profile? @relation(fields: [profileId], references: [id])
-  profileId   String?  @db.ObjectId
-
-  @@map("posts")
+  profile     Profile  @relation(fields: [name], references: [username])
+  name        String
+  likes       Int?
 }
+
+model Registration {
+  id          Int     @id @default(autoincrement())
+  event       Event   @relation(fields: [eventId], references: [id])
+  eventId     Int
+  profile     Profile @relation(fields: [participant], references: [username])
+  participant String
+}
+
+// model Events {
+//   id          String   @id @default(autoincrement())
+//   name        String
+//   description String
+//   startDate   DateTime
+//   endDate     DateTime
+//   category    Json[]
+//   image       String
+//   comments    Json[]
+//   likes       Int?
+// }
+
+// model Profile {
+//   id       String  @id @default(autoincrement())
+//   username String
+//   posts    Posts[]
+//   user     User[]
+
+//   @@map("profile")
+// }
+
+// model Posts {
+//   id          String   @id @default(autoincrement())
+//   image       String
+//   description String
+//   likes       Int?
+//   createdAt   DateTime @default(now())
+//   Profile     Profile? @relation(fields: [profileId], references: [id])
+//   profileId   String?  @db.ObjectId
+
+//   @@map("posts")
+// }
 
 // model Article {
 //   id       String  @id @default(auto()) @map("_id") @db.ObjectId

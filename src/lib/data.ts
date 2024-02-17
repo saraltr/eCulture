@@ -1,8 +1,10 @@
 import axios from "axios";
-import { Events, Posts, Comments } from "./definitions";
+import { Events, Posts, Comments, Comment, Registration } from "./definitions";
 import { unstable_noStore as noStore } from 'next/cache';
 
 type ApiResponse<T> = T | { error: string };
+
+// get events
 
 export async function getEvents(): Promise<Events[]> {
     try {
@@ -14,27 +16,11 @@ export async function getEvents(): Promise<Events[]> {
     }
 }
 
-export async function getCommentsForEvent(eventId: string): Promise<Comments[]> {
-  try {
-    // Example of fetching comments from an API endpoint
-    const response = await fetch(`/api/comments?eventId=${eventId}`);
-    if (!response.ok) {
-      throw new Error('Failed to fetch comments');
-    }
-    const data = await response.json();
-    return data.comments; 
-  } catch (error) {
-    console.error('Error fetching comments:', error);
-    throw error;
-  }
-}
 
-export default getCommentsForEvent;
-
-export async function getEventById(eventId: string): Promise<Events | null> {
+export async function getEventById(eventId: number): Promise<Events | null> {
     noStore();
     try {
-        const response = await axios.get<Events>(`/api/events?id=${eventId}`);
+        const response = await axios.get<Events>(`/api/events?singleId=${eventId}`);
         return response.data;        
     } catch (err) {
         console.log(err);
@@ -42,33 +28,25 @@ export async function getEventById(eventId: string): Promise<Events | null> {
     }
 }
 
-export async function addNewComment(eventId: string, commentData: Comments): Promise<ApiResponse<Comments>> {
+// put req for individual event
+export async function addNewComment(eventId: number, commentData: Comment): Promise<ApiResponse<Comments>> {
     noStore();
     try {
-        const response = await axios.put(`/api/events?eventId=${eventId}`, { commentData });
+        const response = await axios.post(`/api/events?eventId=${eventId}`, { commentData });
         return response.data;
     } catch (err) {
         return { error: `Error adding comment: ${err}. Please try again later.` };
     }
 }
 
-
-
-export async function createEvent() {
+// creates registration
+export async function registerForEvent(eventId: number, registerStatus: Registration): Promise<ApiResponse<Registration>> {
+    noStore();
     try {
-        const response = await axios.post(`/api/events}`);
-        return response.data;        
+        const response = await axios.post(`/api/events?eventId=${eventId}`, { registerStatus });
+        return response.data;
     } catch (err) {
-        console.log(err);
-    }
-}
-
-export async function getProfile(id: string) {
-    try {
-        const response = await axios.get(`/api/events/${id}`);
-        return response;        
-    } catch (err) {
-        console.log(err);
+        return { error: `Error adding comment: ${err}. Please try again later.` };
     }
 }
 
@@ -79,5 +57,15 @@ export async function getPosts(): Promise<Posts[]> {
     } catch (err) {
         console.log(err);
         return [];
+    }
+}
+
+
+export async function createEvent() {
+    try {
+        const response = await axios.post(`/api/events}`);
+        return response.data;        
+    } catch (err) {
+        console.log(err);
     }
 }

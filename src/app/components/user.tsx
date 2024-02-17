@@ -3,13 +3,12 @@ import Image from "next/image";
 import { LogoutButton } from "@/app/components/connection";
 import React from 'react';
 import { authConfig } from "../../../pages/api/auth/[...nextauth]";
-// import { UserIcon } from '@heroicons/react/24/solid';
 import userIcon from "../../../public/images/blank-profile-picture.png"
 import { NewPostForm } from "../components/posts"
 
+
 export const User = async () => {
     const session = await getServerSession(authConfig);
-
 
     if (!session?.user) {
         return null;
@@ -20,7 +19,8 @@ export const User = async () => {
     const userImage = session.user.image ?? userIcon; 
 
     return (
-        <div>
+        <>
+        <section>
             <Image
                 src={userImage}
                 alt="user avatar"
@@ -32,6 +32,10 @@ export const User = async () => {
                 <p>{session.user.email}</p>
                 <LogoutButton />
             </div>
+        </section>
+        <div>
+            <NewPostForm userId={username}></NewPostForm>
         </div>
+        </>
     );
 };

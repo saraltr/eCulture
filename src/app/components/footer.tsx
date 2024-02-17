@@ -3,8 +3,9 @@ import { FaceFrownIcon } from '@heroicons/react/24/solid';
 
 export default async function Footer() {
   return (
-    <footer className="bg-primary text-neutral flex flex-col p-5 text-center">
-      <div className="contact">
+    <footer className="bottom-0 left-0 w-full">
+      <div className="bg-secondary text-neutral flex flex-col p-5 text-center">
+              <div className="contact">
         <ul>
           <li><i className="fa-solid fa-hashtag"></i> Get in contact</li>
           <li><a href="tel:+123-456-7890"><i className="fa-solid fa-phone"></i> +123-456-7890</a></li>
@@ -22,6 +23,8 @@ export default async function Footer() {
         <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
           {/* <img src="images/instagram.png" alt="instagram icon" /> */}
         </a>
+      </div>
+
       </div>
     </footer>
   );
