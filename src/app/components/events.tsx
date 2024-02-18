@@ -35,9 +35,11 @@ export function EventsList() {
     }
 
     return (
-        <>
-            <div className="w-96 bg-base-100 shadow-xl">
+        <section className="grid">
+            <div className="max-w-sm flex flex-col justify-self-center shadow-xl m-5">
+
                 {events.map(event => (
+                    
                 <div key={event.id}>
                     <Link 
                     href={`/discover/${event.id}`}
@@ -47,8 +49,8 @@ export function EventsList() {
                         alt={`${event.name} image`}
                         width={100}
                         height={100}
-                        sizes="(max-width: 640px) 90vw, (max-width: 1024px) 50vw, 30vw"
-                        style={{ width: '100%', height: 'auto' }}
+                        layout="responsive"
+                        priority
                         ></Image>
                         <div className="p-3">
                             <h3 className="card-title">{event.name}</h3>
@@ -64,13 +66,11 @@ export function EventsList() {
                 </div>
                 ))}
             </div>
-        </>
+        </section>
     );
 }
 
-
 // single event 
-
 export function EventDetail() {
     const [event, setEvent] = useState<Events | null>(null);
     // gets event Id using path
@@ -112,13 +112,14 @@ export function EventDetail() {
                 <span className="sr-only">Go back</span>
                 </button>
                 <div className="absolute bottom-0 left-0 w-full text-white p-4 flex justify-center items-center">
-                <h1 className="text-4xl bg-black p-4 bg-opacity-40 font-bold rounded-lg z-10 sm:text-6xl">{event.name}</h1>
+                <h1 className="text-4xl text-center bg-black p-4 bg-opacity-40 font-bold rounded-lg z-10 sm:text-6xl">{event.name}</h1>
                 </div>
                 <Image
                 src={event.image}
                 alt={`${event.name} image`}
                 layout="fill"
-                style={{objectFit: "cover"}}
+                priority
+                objectFit="cover"
                 className="rounded-b-2xl overflow-hidden"
                 />
             </div>
@@ -145,7 +146,7 @@ export function EventDetail() {
                     <div className="flex items-center my-2">
                         <MapPinIcon className="w-10 mx-1" />
                         <div>
-                            <p><strong>Location: </strong>{formatDate(event.startDate)}</p>
+                            <p><strong>Location: </strong>{event.location}</p>
                         </div>
                         
                     </div>
@@ -169,7 +170,7 @@ export function EventDetail() {
                     <div className="m-4 text-neutral">
                     {event.comments && event.comments.length > 0 ? (
                         <div>
-                        <h3 className="font-semibold mb-2 bg-accent p-2 rounded-md">Comments ({event.comments.length})</h3>
+                        <h3 className="font-semibold mb-2 bg-accent p-2 rounded-md">Comments ( {event.comments.length} )</h3>
                         <div className="bg-neutral text-primary p-2">
                             {event.comments.map(comment => (
                             <div key={comment.id} className="mb-4">
@@ -181,7 +182,7 @@ export function EventDetail() {
                         </div>
                         </div>
                     ) : (
-                        <p>No comments available.</p>
+                        <h3 className="font-semibold mb-2 bg-accent p-2 rounded-md">No comments available.</h3>
                     )}
                     </div>
                     <CommentForm eventId={eventId} />
@@ -219,8 +220,14 @@ const RegistrationBox: React.FC<{ eventId: number; }> = ({ eventId }) => {
             };
 
             try {
-                await registerForEvent(eventId, registerStatus);
-                setMessage("Successfully registered for the event!");
+                const response = await registerForEvent(eventId, registerStatus);
+
+                if ("error" in response) {
+                    setMessage(response.error);
+                } else {
+                    setMessage("Successfully registered for the event!");
+                }
+
             } catch (error) {
                 setMessage("Error registering for the event. Try again later.");
             }
@@ -231,12 +238,13 @@ const RegistrationBox: React.FC<{ eventId: number; }> = ({ eventId }) => {
         <div>
             {status === 'authenticated' && (
                 <>
+                    {message && <p>{message}</p>}
                     <label className="flex items-center mb-4">
                     <input
                         type="checkbox"
                         checked={isChecked}
                         onChange={handleCheckboxChange}
-                        className="mr-2"
+                        className="mr-2 checkbox checkbox-accent"
                         required
                     />
                     <span className={`${isChecked ? ' text-green-700 font-bold' : 'text-gray-700 font-bold text-red-600'}`}>Check to register</span>

@@ -58,6 +58,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     res.status(200).json(updatedEvent);
 
                     } else if (registerStatus) {
+
+                        const existing = await prisma.registration.findFirst({
+                            where: {
+                                eventId: Number(eventId),
+                                participant: registerStatus.participant
+                            }
+                        });
+
+                        if (existing){
+                            return res.status(400).json({ message: "You are already registered for this event"});
+                        }
+                        
                         const updatedRegistration = await prisma.registration.create({
                            data: {
                             event : {

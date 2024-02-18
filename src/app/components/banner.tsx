@@ -25,7 +25,7 @@ const Banner: React.FC<BannerProps> = ({ banner1, banner2, title, button, desc }
                 )}
             </section>
             <section className="hidden sm:block relative">
-            <div className={style.banner}>
+            <div className="flex">
                 <Image
                     src={banner1}
                     alt='eculture banner1'

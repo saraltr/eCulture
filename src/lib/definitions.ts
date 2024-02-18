@@ -7,6 +7,7 @@ export type Events = {
     image: string
     content: string
     likes:  number
+    location: string
     category: []
     comments: Comments[];
     registrations: Registration[];
@@ -46,4 +47,11 @@ export type Posts = {
 export type Registration = {
   eventId: number;
   participant: string;
+}
+
+export type Profile = {
+  username: string;
+  comments: Comment[];
+  posts:  Posts[];
+  registrations: Registration[];
 }

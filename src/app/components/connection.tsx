@@ -3,6 +3,7 @@
 import { SessionProvider, useSession, signIn, signOut } from "next-auth/react";
 import { ArrowRightIcon } from '@heroicons/react/24/solid';
 import { useEffect } from "react";
+import { redirect } from "next/navigation";
 
 export function Connection() {
   return (
@@ -88,13 +89,15 @@ function ConnectionBtn() {
 
   }, []);
 
-  const handleLogin = () => {
-    if (session) {
-      signOut();
-    } else {
-      signIn(undefined, { callbackUrl: "/profile" });
-    }
-  };
+    const handleLogin = () => {
+      if (session) {
+        signOut(
+          redirect("/")
+        );
+      } else {
+        signIn(undefined, { callbackUrl: "/profile" });
+      }
+    };
 
   return (
     <div>

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Events, Posts, Comments, Comment, Registration } from "./definitions";
+import { Events, Posts, Comments, Comment, Registration, Profile } from "./definitions";
 import { unstable_noStore as noStore } from 'next/cache';
 
 type ApiResponse<T> = T | { error: string };
@@ -45,8 +45,12 @@ export async function registerForEvent(eventId: number, registerStatus: Registra
     try {
         const response = await axios.post(`/api/events?eventId=${eventId}`, { registerStatus });
         return response.data;
-    } catch (err) {
-        return { error: `Error adding comment: ${err}. Please try again later.` };
+    } catch (err: any) {
+        if (err.response && err.response.status === 400) {
+            return { error: "You are already registered for this event." };
+        } else {
+            return { error: `Error registering for the event: ${err}. Please try again later.` };
+        }
     }
 }
 
@@ -61,11 +65,12 @@ export async function getPosts(): Promise<Posts[]> {
 }
 
 
-export async function createEvent() {
+export async function getProfile(username: string): Promise<ApiResponse<Profile>> {
+    noStore();
     try {
-        const response = await axios.post(`/api/events}`);
-        return response.data;        
+        const response = await axios.get(`/api/profile?user=${username}`);
+        return response.data;
     } catch (err) {
-        console.log(err);
+        return { error: `Error adding comment: ${err}. Please try again later.` };
     }
 }

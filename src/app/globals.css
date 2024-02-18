@@ -24,6 +24,10 @@ body {
   font-size: 16px;
 }
 
+h1 {
+  text-shadow: 2px 2px 3px #4B1B1B;
+}
+
 h1,
 h2,
 h3,
