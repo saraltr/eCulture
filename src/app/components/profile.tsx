@@ -5,58 +5,71 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-const UserProfile: React.FC<{username: string}> = ({username}) => {
-
+const UserProfile: React.FC<{ username: string }> = ({ username }) => {
     const [profile, setProfile] = useState<Profile | null>(null);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchProfile = async () => {
-           try {
+            try {
                 const profileInfo = await getProfile(username);
                 if ('error' in profileInfo) {
                     setError(profileInfo.error);
                 } else {
                     setProfile(profileInfo);
+                    setTimeout(createInstanceInDatabase, 2000);
                 }
             } catch (error) {
                 console.error(error);
                 setError('An error occurred while fetching the profile.');
-            }  
+            }
         };
 
         fetchProfile();
+    }, [username]);
 
-    },[username])
+    const createInstanceInDatabase = async () => {
+        try {
+            // Your API call to create a new instance in the database
+            // Example: await createInstance(profile.id);
+            console.log('Instance created successfully');
+        } catch (error) {
+            console.error('Error creating instance:', error);
+        }
+    };
 
     if (!profile) {
         return <h3>Loading Profile Info...</h3>;
     }
 
-
     return (
         <>
+            {error && <div>Error: {error}</div>}
+            {profile.registrations.length === 0}
             <div className="">
                 <h3>Your Registered Events</h3>
-                <div className="flex overflow-x-scroll overflow-y-hidden ">
-                    {profile.registrations.map((events, index) => (
-                    <RegisteredEvent key={index} eventId={events.eventId} />
-                    ))}
-                </div>
-                
+                {profile.registrations.length === 0 ? (
+                    <p>No registered events.</p>
+                ) : (
+                    <div className="flex overflow-x-scroll overflow-y-hidden">
+                        {profile.registrations.map((events, index) => (
+                            <RegisteredEvent key={index} eventId={events.eventId} />
+                        ))}
+                    </div>
+                )}
             </div>
-            
-
             <div className="">
                 <h3>Your Comments</h3>
                 {profile.comments.map((comment, index) => (
-                <p key={index}>{comment.username} {comment.content}</p>
-            ))}
+                    <p key={index}>
+                        {comment.username} {comment.content}
+                    </p>
+                ))}
             </div>
-                
         </>
-    )
-}
+    );
+};
+
 
 interface EventDetailProps {
     eventId: number;
