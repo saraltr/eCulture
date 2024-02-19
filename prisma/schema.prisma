@@ -12,6 +12,7 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
+
 // local postgres
 // datasource db {
 //   provider = "postgresql"
