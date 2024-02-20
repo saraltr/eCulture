@@ -74,3 +74,16 @@ export async function getProfile(username: string): Promise<ApiResponse<Profile>
         return { error: `Error adding comment: ${err}. Please try again later.` };
     }
 }
+
+export async function deleteRegistration(eventId: number, username: string): Promise<Profile | null> {
+    noStore();
+    try {
+        const response = await axios.delete<Profile>(`/api/profile?id=${eventId}`, {
+            data: username
+        });
+        return response.data;        
+    } catch (err) {
+        console.log(err);
+        return null;
+    }
+}

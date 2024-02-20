@@ -55,7 +55,7 @@ function SmallerNav() {
               <Bars3BottomRightIcon />
             </div>
           </div>
-          <ul className="bg-primary mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content rounded-box w-52">
+          <ul className="bg-primary mt-3 z-20 p-2 shadow menu menu-sm dropdown-content rounded-box w-52">
             <li>
               <Link className=" text-2xl justify-between" href="/profile">Profile</Link>
             </li>

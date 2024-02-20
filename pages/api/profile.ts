@@ -31,8 +31,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     res.status(500).json({ message: 'Internal Server Error' });
                 }
                 break
+
+            case 'DELETE':
+                const { id } = req.query;
+                const { username } = req.body
+                try{
+                    
+                await prisma.registration.deleteMany({
+                    where: {
+                        eventId: Number(id),
+                        participant: username
+                    }
+                });
+                
+                res.status(204).end();
+                } catch(error) {
+                    console.error(error);
+                    res.status(500).json({ message: 'Internal Server Error' });
+                }
                 default:
-                res.setHeader('Allow', ['GET']);
+                res.setHeader('Allow', ['GET', 'DELETE']);
                 res.status(405).end(`Method ${req.method} Not Allowed`);
 
         }
