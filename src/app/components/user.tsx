@@ -42,7 +42,6 @@ export const User = () => {
     }
 
     const username = session.user.name ?? "eculture_user"
-    const userIdentifier = session.user.email ?? ""
     const userImage = session.user.image ?? userIcon; 
 
     return (
@@ -50,7 +49,7 @@ export const User = () => {
         <section className="m-5 flex items-center gap-10">
 
             <div className="avatar online flex-none ">
-                <div className="w-24 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+                <div className="w-26 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2 overflow-hidden">
                     <Image
                     src={userImage}
                     alt="user avatar"
@@ -61,15 +60,13 @@ export const User = () => {
             </div>
 
             <div className="">
-                <h2>@{session.user.name}</h2>
+                <h2 >@{session.user.name}</h2>
                 
-                <p>{session.user.email}</p>
-                <div className=" my-3 btn bg-secondary hover:bg-primary text-white py-2 px-10 rounded-md">
+                <p className="text-accent">{session.user.email}</p>
+                <div className=" my-3 btn bg-secondary hover:bg-primary text-white py-2 px-6 rounded-md">
                     <LogoutButton />
                 </div>
-                
             </div>
-
 
         </section>
 

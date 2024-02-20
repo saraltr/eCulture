@@ -8,7 +8,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             case 'GET':
                 try {
                     const { user } = req.query;
-                    const profile = await prisma.profile.findUnique( {
+                    let profile = await prisma.profile.findUnique( {
                         where: {
                             username: String(user)
                         },
@@ -18,28 +18,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                             posts: true
                         }
                     })
-                    if (profile) {
-                        res.status(200).json(profile);
-                    } else if (!profile) {
-                        const newProfile = await prisma.profile.create({
+                    if (!profile) {
+                        let profile = await prisma.profile.create({
                             data : {
                                 username: String(user)
                             }
                         })
-                        res.status(201).json(newProfile);
-                    } else {
-                        res.status(404).json({
-                            error: "Profile cound not be found or created"
-                        })
                     } 
+                    res.status(200).json(profile);
                 } catch(error) {
                     console.error(error);
                     res.status(500).json({ message: 'Internal Server Error' });
                 }
-
                 break
                 default:
-                res.setHeader('Allow', ['GET', 'PUT']);
+                res.setHeader('Allow', ['GET']);
                 res.status(405).end(`Method ${req.method} Not Allowed`);
 
         }
@@ -50,4 +43,3 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         await prisma.$disconnect();
     }
 }
-

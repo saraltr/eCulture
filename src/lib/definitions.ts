@@ -8,7 +8,7 @@ export type Events = {
     content: string
     likes:  number
     location: string
-    category: []
+    category: string[]
     comments: Comments[];
     registrations: Registration[];
 }

@@ -9,7 +9,7 @@ import { Bars3BottomRightIcon } from '@heroicons/react/24/solid';
 function Nav() {
   return (
     <nav className='bg-secondary'>
-      <ul className="flex items-center justify-between p-1 mx-2">
+      <ul className="flex items-center justify-between p-2 mx-2">
         <li className=''>
           <Link href="/">
             <Image
@@ -73,10 +73,10 @@ function SmallerNav() {
 export default function Header() {
   return (
     <header className="text-neutral font-headline">
-      <div className="sm:hidden">
+      <div className="lg:hidden">
         <SmallerNav />
       </div>
-      <div className="hidden sm:block">
+      <div className="hidden lg:block">
         <Nav />
       </div>
     </header>
