@@ -17,38 +17,26 @@ const UserProfile: React.FC<{ username: string }> = ({ username }) => {
                     setError(profileInfo.error);
                 } else {
                     setProfile(profileInfo);
-                    setTimeout(createInstanceInDatabase, 2000);
                 }
             } catch (error) {
                 console.error(error);
-                setError('An error occurred while fetching the profile.');
             }
         };
 
         fetchProfile();
     }, [username]);
 
-    const createInstanceInDatabase = async () => {
-        try {
-            // Your API call to create a new instance in the database
-            // Example: await createInstance(profile.id);
-            console.log('Instance created successfully');
-        } catch (error) {
-            console.error('Error creating instance:', error);
-        }
-    };
-
     if (!profile) {
         return <h3>Loading Profile Info...</h3>;
     }
 
-    return (
-        <>
-            {error && <div>Error: {error}</div>}
-            {profile.registrations.length === 0}
+return (
+    <>
+        {error && <div>Error: {error}</div>}
+        {profile && (
             <div className="">
                 <h3>Your Registered Events</h3>
-                {profile.registrations.length === 0 ? (
+                {profile.registrations && profile.registrations.length === 0 ? (
                     <p>No registered events.</p>
                 ) : (
                     <div className="flex overflow-x-scroll overflow-y-hidden">
@@ -58,17 +46,18 @@ const UserProfile: React.FC<{ username: string }> = ({ username }) => {
                     </div>
                 )}
             </div>
-            <div className="">
-                <h3>Your Comments</h3>
-                {profile.comments.map((comment, index) => (
-                    <p key={index}>
-                        {comment.username} {comment.content}
-                    </p>
-                ))}
-            </div>
-        </>
+        )}
+        <div className="">
+            <h3>Your Comments</h3>
+            {profile && profile.comments.map((comment, index) => (
+                <p key={index}>
+                    {comment.username} {comment.content}
+                </p>
+            ))}
+        </div>
+    </>
     );
-};
+}
 
 
 interface EventDetailProps {

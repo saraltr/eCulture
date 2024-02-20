@@ -14,11 +14,11 @@ export function Connection() {
 }
 
 function ConnectionContent() {
-  const { data: session } = useSession();
+const { data: session } = useSession();
 
   useEffect(() => {
     const handleSignIn = async () => {
-      await signIn(undefined, { callbackUrl: "/profile" });
+      await signIn();
     };
 
     const handleClick = () => {
@@ -38,11 +38,9 @@ function ConnectionContent() {
   }, []);
 
   if (session) {
-    const userName = session.user?.name ?? "User";
 
     return (
       <div>
-        <p>Signed in as {userName}</p>
         <button onClick={() => signOut()}>Sign out</button>
       </div>
     );
@@ -50,9 +48,7 @@ function ConnectionContent() {
 
   return (
     <div>
-      <button id="loginBtn">
-        Login Now <ArrowRightIcon className="arrowIcon" />
-      </button>
+      <button onClick={() => signIn()}>Login</button>
     </div>
   );
 }
@@ -91,9 +87,7 @@ function ConnectionBtn() {
 
     const handleLogin = () => {
       if (session) {
-        signOut(
-          redirect("/")
-        );
+        signOut({ callbackUrl: "/" });
       } else {
         signIn(undefined, { callbackUrl: "/profile" });
       }
@@ -107,6 +101,16 @@ function ConnectionBtn() {
     </div>
   );
 }
+
+export const LoginButton = () => {
+    return (
+        <button onClick={async () => {
+            await signIn();
+        }}>
+            Login
+        </button>
+    );
+};
 
 export const LogoutButton = () => {
     return(
