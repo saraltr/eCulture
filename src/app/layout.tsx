@@ -22,11 +22,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${dm_sans.className} bg-white text-primary`}>
+        <main>
         <Provider>
         <Header></Header>
         {children}
         <Footer></Footer>
         </Provider>
+        </main>
         </body>
     </html>
   );

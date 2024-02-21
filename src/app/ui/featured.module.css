@@ -1,0 +1,58 @@
+.container{
+    background-color: #32527b;
+    color: #F7F2EA;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.container h2 {
+    text-align: center;
+    margin: 1rem 0;
+}
+
+.imagescontent {
+    margin: 2rem;
+    overflow: hidden;
+}
+
+.imagescontent {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.imagescontent div {
+    position: relative;
+    overflow: hidden;
+    border-radius: 20px;
+}
+
+.imagescontent img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.imagescontent div:hover img {
+    transform: scale(1.1);
+}
+
+.content button {
+    background-color: #F7F2EA;
+    color: #32527b;
+    margin: auto;    
+}
+.content button:hover {
+    background-color: #f6f7ea;
+    color: #32527b;
+}
+
+@media (min-width: 1024px) {
+    .imagescontent {
+        display: flex;
+        align-content: center;
+        justify-content: center;
+    }
+}
