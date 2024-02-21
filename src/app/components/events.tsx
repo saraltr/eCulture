@@ -10,6 +10,9 @@ import { usePathname } from "next/navigation"
 import CommentForm from "./comments";
 import Image from "next/image";
 import Link from "next/link";
+import { notFound } from 'next/navigation';
+
+
 // icons
 import { CalendarDaysIcon, ArrowLeftCircleIcon, MapPinIcon } from "@heroicons/react/24/solid";
 
@@ -156,9 +159,9 @@ export function EventsList({filter}: Recs) {
                 </>
                 )}
 
-            <div className="max-w-sm m-auto flex flex-col md:grid md:grid-cols-2 md:max-w-none gap-2">
+            <div className="max-w-sm m-auto flex flex-col md:grid md:grid-cols-2 lg:grid-cols-3 md:max-w-none gap-2">
                 {filteredEvents.map(event => (
-                <div key={event.id} className="shadow-xl m-5 relative rounded-xl hover:scale-105 md:w-w-[1/2] lg:w-[1/3]">
+                <div key={event.id} className="shadow-xl m-5 relative rounded-xl justify-self-center hover:scale-105 md:w-3/4 lg:w-2/3 ">
                     <Link href={`/discover/${event.id}`}>
                         <div>
                             <div className="relative h-[180px] md:h-[200px] lg:h-[300px] overflow-hidden">
@@ -201,6 +204,8 @@ export function EventsList({filter}: Recs) {
 // single event 
 export function EventDetail() {
     const [event, setEvent] = useState<Events | null>(null);
+    const [loading, setLoading] = useState<boolean>(true);
+
     // gets event Id using path
     const pathname = usePathname();
     const eventString = pathname?.split("/").pop() ?? ""
@@ -216,19 +221,27 @@ export function EventDetail() {
                 // sets eventId
                 const eventData = await getEventById(eventId);
                 setEvent(eventData);
+                setLoading(false);
                 
 
             } catch (error) {
                 console.error(error);
+                setLoading(false);
             }
         };
 
         fetchEvent();
     }, [event, eventId]);
 
-    if (!event) {
-        return <div>Loading Event...</div>;
+     if (loading) {
+        return <p>Loading...</p>;
     }
+
+    if (!event) {
+        notFound();
+        return null; 
+    }
+    
     return (
         <>
         <section className="">
@@ -291,7 +304,7 @@ export function EventDetail() {
             </section>
 
             
-            <section className="md:grid md:grid-cols-2 gap-4">
+            <section className="lg:grid lg:grid-cols-2 gap-4">
                 {/* first column */}
                 <div className="md:col-span-1">
                     {/* comments */}
