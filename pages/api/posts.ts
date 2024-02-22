@@ -5,41 +5,40 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const prisma = new PrismaClient();
     try {
         switch (req.method) {
-
             case 'GET':
                 const { id } = req.query;
                 if (id) {
-                    const event = await prisma.event.findUnique({
+                    const post = await prisma.post.findUnique({
                         where: {
                             id: Number(id)
                         }
                     });
-                if (event) {
-                    res.status(200).json(event);
+                if (post) {
+                    res.status(200).json(post);
                 } else {
-                    res.status(404).json({ error: 'Event not found' });
+                    res.status(404).json({ error: 'Post not found' });
                 }
                 } else {
                     const events = await prisma.post.findMany();
                     if  (events) {
                         res.status(200).json(events);
                     } else {
-                        res.status(404).json({ error: 'List of Events not found' });
+                        res.status(404).json({ error: 'List of Posts not found' });
                     }
                 }
                 break;
-            // case 'POST':
-            //     const { image, description, userId } = req.body.postData;
+            case 'POST':
+                const { image, description, username } = req.body;
 
-            //     const createdEvent = await prisma.posts.create({
-            //         data: {
-            //             image: image,
-            //             description: description,
-            //             userId: userId,
-            //         }
-            //     });
-            //     res.status(200).json(createdEvent);
-            //     break;
+                const createdPost = await prisma.post.create({
+                    data: {
+                        image: image,
+                        description: description,
+                        name: username,
+                    }
+                });
+                res.status(200).json(createdPost);
+                break;
             default:
                 res.setHeader('Allow', ['GET', 'POST', 'DELETE', 'PUT']);
                 res.status(405).end(`Method ${req.method} Not Allowed`);

@@ -11,6 +11,7 @@ import CommentForm from "./comments";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from 'next/navigation';
+import { ExclamationCircleIcon } from "@heroicons/react/24/outline";
 
 
 // icons
@@ -382,7 +383,10 @@ const RegistrationBox: React.FC<{ eventId: number; }> = ({ eventId }) => {
         <div>
             {status === 'authenticated' && (
                 <>
-                    {message && <p>{message}</p>}
+                    {message && <div className=" flex items-center bg-accent w-fit p-0.5 text-neutral my-2 rounded-md">
+                        <ExclamationCircleIcon className="w-10"></ExclamationCircleIcon>
+                        <p className="p-2">{message}</p>
+                        </div>}
                     <label className="flex items-center mb-4">
                     <input
                         type="checkbox"

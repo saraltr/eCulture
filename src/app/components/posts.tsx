@@ -1,5 +1,5 @@
 "use client"
-import { getPosts } from "@/lib/data"
+import { getPosts, addNewPost } from "@/lib/data"
 import { Posts } from "@/lib/definitions";
 import { formatDate } from "@/lib/utils";
 import React, { useState, useEffect, FormEvent } from 'react';
@@ -36,20 +36,30 @@ export function PostList() {
 }
 
 interface NewPostFormProps {
-    userId: string;
+    username: string;
 }
 
-export const NewPostForm: React.FC<NewPostFormProps> = ({ userId }) => {
+export const NewPostForm: React.FC<NewPostFormProps> = ({ username }) => {
     const [image, setImage] = useState("");
     const [description, setDescription] = useState("");
+    const [message, setMessage] = useState<string>("");
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
         const now = new Date();
         const datetime = now.toLocaleString();
-        const date = datetime;
-        const postData = { userId, image, description, date };
+        const date = new Date(datetime);
+        const postData = { image, description, username };
         console.log(postData);
+
+        try {
+            const response = await addNewPost(postData);
+            setMessage("Post created!")
+
+        } catch (error) {
+            setMessage("Error registering for the event. Try again later.");
+        }
+
         setImage("");
         setDescription("");
         

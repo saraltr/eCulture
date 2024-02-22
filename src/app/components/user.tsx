@@ -75,7 +75,7 @@ export const User = () => {
         </section>
 
         <section>
-            <NewPostForm userId={username}></NewPostForm>
+            <NewPostForm username={username}></NewPostForm>
         </section>
         </>
     );

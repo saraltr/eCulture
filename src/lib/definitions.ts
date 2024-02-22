@@ -40,8 +40,14 @@ export type Posts = {
   image: string;
   description: string;
   createdAt: Date;
-  user: Users;
-  userId: number;
+  name: string
+  likes?: number
+}
+
+export type Post = {
+  image: string;
+  description: string;
+  username: string
 }
 
 export type Registration = {

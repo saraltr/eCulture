@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Events, Posts, Comments, Comment, Registration, Profile } from "./definitions";
+import { Events, Posts, Comments, Comment, Registration, Profile, Post } from "./definitions";
 import { unstable_noStore as noStore } from 'next/cache';
 
 type ApiResponse<T> = T | { error: string };
@@ -7,6 +7,7 @@ type ApiResponse<T> = T | { error: string };
 // get events
 
 export async function getEvents(): Promise<Events[]> {
+    noStore();
     try {
         const response = await axios.get<Events[]>("/api/events");
         return response.data;        
@@ -55,6 +56,7 @@ export async function registerForEvent(eventId: number, registerStatus: Registra
 }
 
 export async function getPosts(): Promise<Posts[]> {
+    noStore();
     try {
         const response = await axios.get<Posts[]>("/api/posts");
         return response.data;        
@@ -64,6 +66,16 @@ export async function getPosts(): Promise<Posts[]> {
     }
 }
 
+export async function addNewPost(postData: Post): Promise<ApiResponse<Post>> {
+    noStore();
+    try {
+        const response = await axios.post<Post>(`/api/posts`, postData);
+        return response.data;
+    } catch(err) {
+        console.log(err);
+        return { error: 'Failed to add new post' };
+    }
+}
 
 export async function getProfile(username: string): Promise<ApiResponse<Profile>> {
     noStore();
