@@ -2,7 +2,6 @@
 import { getPosts, addNewPost, getMostLiked } from "@/lib/data"
 import { Posts } from "@/lib/definitions";
 import React, { useState, useEffect, FormEvent } from 'react';
-import Image from "next/image";
 
 export function PostList() {
     const [posts, setPosts] = useState<Posts[]>([]);
@@ -18,7 +17,7 @@ export function PostList() {
         };
 
         fetchEvents();
-    }, [posts]);
+    }, []);
 
     if (!posts) {
         return <div>Loading Posts...</div>;
@@ -61,7 +60,7 @@ export function MostLiked() {
         };
 
         fetchEvents();
-    }, [posts]);
+    }, []);
 
     if (!posts) {
         return <div>Loading Posts...</div>;
