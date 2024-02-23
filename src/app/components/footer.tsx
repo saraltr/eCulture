@@ -14,7 +14,7 @@ export default async function Footer() {
           alt="eculture footer logo"
           width={100}
           height={100}></Image>
-        <p>Eculture &copy; 2024.</p>
+        <p>Eculture &copy; 2024 | Sara Latorre | WDD 430 Fullstack Project</p>
       </aside> 
       <nav>
         <h3 className="footer-title">Social</h3> 
