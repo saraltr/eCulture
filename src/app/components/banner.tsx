@@ -22,7 +22,7 @@ const MainBanner: React.FC<BannerProps> = ({ banner1, banner2, title, desc }) =>
                     ></Image> 
                 </div>
                 
-                <h1 className="menu-title text-4xl md:text-5xl text-neutral absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">{title}</h1>
+                <h1 className="bg-secondary bg-opacity-50 bg-rounded-2xl menu-title text-4xl md:text-5xl text-neutral absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">{title}</h1>
             </section>
 
             <section className="hidden sm:block relative">
@@ -42,7 +42,7 @@ const MainBanner: React.FC<BannerProps> = ({ banner1, banner2, title, desc }) =>
                         />
                     )}
                 </div>
-                <h1 className="menu-title text-4xl md:text-6xl text-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-neutral">{title}</h1>
+                <h1 className="bg-secondary bg-opacity-70 rounded-2xl menu-title text-4xl md:text-6xl text-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-neutral">{title}</h1>
                 {desc && <p>{desc}</p>}
             </section>        
         </>

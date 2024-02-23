@@ -7,6 +7,7 @@ import featured from '../../public/events/event4.jpg'
 import featured2 from '../../public/events/lights.jpg'
 import Image from 'next/image'
 import style from '@/app/ui/featured.module.css'
+import { MostLiked } from './components/posts'
 
 export default async function Home(){
     return (
@@ -99,10 +100,20 @@ export default async function Home(){
                         
                     </div>
                     <div className="flex justify-center">
-                        <button className="btn rounded-xl shadow-lg">
+                        <Link href={"/discover/4"}>
+                           <button className="btn rounded-xl shadow-lg">
                             Learn More
-                        </button>
+                        </button> 
+                        </Link>
+                        
                     </div>
+                </div>
+            </section>
+
+            <section className='m-4'>
+                <h2 className='text-center bg-primary text-neutral rounded p-2'>Most liked posts of our community</h2>
+                <div className="">
+                    <MostLiked></MostLiked>
                 </div>
             </section>
             

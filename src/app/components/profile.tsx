@@ -8,6 +8,7 @@ import Link from "next/link";
 const UserProfile: React.FC<{ username: string }> = ({ username }) => {
     const [profile, setProfile] = useState<Profile | null>(null);
     const [error, setError] = useState<string | null>(null);
+    
 
     useEffect(() => {
         const fetchProfile = async () => {
@@ -48,30 +49,37 @@ return (
                 )}
             </div>
             )}
-            <div className="">
-                <h3>Your Comments</h3>
-                {profile && profile.comments.map((comment, index) => (
-                    <div key={index}>
-                        <p>{comment.content}</p>
+            <div className="my-2">
+                <h3 className="bg-secondary text-neutral p-2 rounded-md">Your Comments</h3>
+                <div className="bg-neutral">
+                    {profile && profile.comments.map((comment, index) => (
+                    <div key={index} className="border-b-2 border-accent">
+                        <p className="m-2">{comment.content}</p>
                         {/* <p>Event ID: {comment.eventId}</p> */}
                     </div>
                 ))}
+                </div>
+                
             </div>
 
-            <div className="">
-                <h3>Your Posts</h3>
-                {profile && profile.posts.map((post, index) => (
-                    <div key={index}>
+            <div className="my-4">
+                <h3 className="bg-secondary text-neutral p-2 rounded-md">Your Posts</h3>
+                <div className="max-w-sm m-auto flex flex-col md:grid md:grid-cols-2 lg:grid-cols-3 md:max-w-none gap-2">
+                    {profile && profile.posts.map((post, index) => (
+                    <div key={index} className="shadow-xl m-5 p-3 relative rounded-xl justify-self-center md:w-3/4 lg:w-2/3 ">
                         <Image
                         src={post.image}
                         alt={`${post.id}'s post image`}
                         width={100}
                         height={100}
+                        layout="responsive"
                         >
                         </Image>
-                        <p>{post.description}</p>
+                        <p className="text-center">{post.description}</p>
                     </div>
                 ))}
+                </div>
+                
             </div>
     </>
     );

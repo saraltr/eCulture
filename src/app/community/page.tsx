@@ -1,9 +1,19 @@
-import { PostList } from "../components/posts";
+import { PostList, MostLiked } from "../components/posts";
+import { Banner } from "../components/banner";
+import banner from "../../../public/banner5.jpg"
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Community",
+    description: "Eculture community's posts",
+  };
 
 export default function Community(){
     return(
         <>
-        <h1>hello</h1>
+        <Banner
+        banner1={banner}
+        title="Community"></Banner>
         <PostList></PostList>
         </>
     )

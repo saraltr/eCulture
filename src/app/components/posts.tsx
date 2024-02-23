@@ -1,8 +1,8 @@
 "use client"
-import { getPosts, addNewPost } from "@/lib/data"
+import { getPosts, addNewPost, getMostLiked } from "@/lib/data"
 import { Posts } from "@/lib/definitions";
-import { formatDate } from "@/lib/utils";
 import React, { useState, useEffect, FormEvent } from 'react';
+import Image from "next/image";
 
 export function PostList() {
     const [posts, setPosts] = useState<Posts[]>([]);
@@ -25,13 +25,67 @@ export function PostList() {
     }
 
     return (
-        <>
-            {posts.map(post => (
-                <div key={post.id}>
-                    <p>{post.description}</p>
-                </div>
-            ))}
-        </>
+      <div className="container mx-auto px-4 py-8">
+      <h2 className="text-3xl font-semibold mb-4">Recent Posts</h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        {posts.length > 0 ? (
+          posts.map(post => (
+            <div key={post.id} className="bg-white rounded-lg shadow-md overflow-hidden">
+              <img src={post.image} alt={post.description} className="w-full h-40 object-cover object-center" />
+              <div className="p-4">
+                <p className="text-primary text-lg font-semibold mb-2">{post.description}</p>
+                <p className="text-accent">Posted by: {post.name}</p>
+              </div>
+            </div>
+          ))
+        ) : (
+          <p className="text-gray-800">No recent posts found</p>
+        )}
+      </div>
+    </div>
+
+    );
+}
+
+export function MostLiked() {
+    const [posts, setPosts] = useState<Posts[]>([]);
+
+    useEffect(() => {
+        const fetchEvents = async () => {
+            try {
+                const eventsData = await getMostLiked();
+                setPosts(eventsData);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        fetchEvents();
+    }, [posts]);
+
+    if (!posts) {
+        return <div>Loading Posts...</div>;
+    }
+
+    return (
+    <div className="container mx-auto px-4 py-8">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+        {posts.length > 0 ? (
+          posts.map(post => (
+            <div key={post.id} className="bg-white rounded-lg shadow-md overflow-hidden">
+              <img src={post.image} alt={post.description} className="w-full h-40 object-cover object-center" />
+              <div className="p-4">
+                <p className="text-primary text-lg font-semibold mb-2">{post.description}</p>
+                <p className="text-accent">Posted by: {post.name}</p>
+              </div>
+            </div>
+          ))
+        ) : (
+          <p className="text-gray-800">No recent posts found</p>
+        )}
+      </div>
+    </div>
+
     );
 }
 
@@ -46,9 +100,6 @@ export const NewPostForm: React.FC<NewPostFormProps> = ({ username }) => {
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-        const now = new Date();
-        const datetime = now.toLocaleString();
-        const date = new Date(datetime);
         const postData = { image, description, username };
         console.log(postData);
 
@@ -66,6 +117,8 @@ export const NewPostForm: React.FC<NewPostFormProps> = ({ username }) => {
     }
 
     return (
+        <>
+        <h3 className="bg-secondary m-4 text-neutral p-2 rounded-md">Create a New Post</h3>
         <form onSubmit={handleSubmit}>
         <div>
             <label htmlFor="image">Image URL:</label>
@@ -86,7 +139,11 @@ export const NewPostForm: React.FC<NewPostFormProps> = ({ username }) => {
             required
             ></textarea>
         </div>
-        <button type="submit">Submit</button>
+        <div className="flex justify-center">
+          <button className="btn my-2 bg-primary hover:bg-secondary text-white w-fit" type="submit">Submit</button>
+        </div>
+        
         </form>
+        </>
     );
 };

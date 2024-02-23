@@ -66,6 +66,21 @@ export async function getPosts(): Promise<Posts[]> {
     }
 }
 
+export async function getMostLiked() {
+    noStore();
+    try {
+        const response = await axios.get('/api/posts', {
+        params: {
+            mostLiked: true
+        }
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching most liked posts:', error);
+        throw error; 
+    }
+};
+
 export async function addNewPost(postData: Post): Promise<ApiResponse<Post>> {
     noStore();
     try {
