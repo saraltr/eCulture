@@ -101,7 +101,7 @@ export const NewPostForm: React.FC<NewPostFormProps> = ({ username }) => {
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
         const postData = { image, description, username };
-        console.log(postData);
+        // console.log(postData);
 
         try {
             const response = await addNewPost(postData);

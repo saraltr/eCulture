@@ -38,6 +38,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 const { commentData, registerStatus } = req.body;
                 try {
                     if (commentData){
+
+                        if (typeof commentData !== 'object') {
+                            return res.status(400).json({ error: 'Invalid commentData' });
+                        }
+
+                        if (!commentData.content || !commentData.username) {
+                            return res.status(400).json({ error: 'Missing content or username in commentData' });
+                        }
+
+                        if (commentData.content.trim() === '') {
+                            return res.status(400).json({ error: 'Empty comment' });
+                        }
+
                         const updatedEvent = await prisma.comment.create({
                         data: {
                         content: commentData.content,
@@ -99,7 +112,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 }
                 break;
             default:
-                res.setHeader('Allow', ['GET', 'POST', 'DELETE', 'PUT']);
+                res.setHeader('Allow', ['GET', 'POST']);
                 res.status(405).end(`Method ${req.method} Not Allowed`);
         }
     } catch (error) {

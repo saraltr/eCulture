@@ -19,12 +19,12 @@ const CommentForm: React.FC<CommentProps> = ({ eventId }) => {
     e.preventDefault();
 
     const commentData: Comment = { content: comment, username: username };
-    console.log(commentData);
+    // console.log(commentData);
 
     try {
       await addNewComment(eventId, commentData);
       setComment("");
-      console.log("Comment submitted!");
+      // console.log("Comment submitted!");
     } catch (error) {
       console.error("Error submitting comment:", error);
     }

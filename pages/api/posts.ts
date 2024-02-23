@@ -52,6 +52,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             case 'POST':
                 const { image, description, username } = req.body;
 
+                if (!image || !description || !username) {
+                    return res.status(400).json({ error: 'Missing image, description, or username' });
+                }
+
+                if (typeof image !== 'string') {
+                    return res.status(400).json({ error: 'Invalid image URL' });
+                }
+
+                if (typeof username !== 'string' || username.trim() === '') {
+                    return res.status(400).json({ error: 'Invalid username' });
+                }
+
                 const createdPost = await prisma.post.create({
                     data: {
                         image: image,
