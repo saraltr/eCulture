@@ -12,6 +12,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from 'next/navigation';
 import { ExclamationCircleIcon } from "@heroicons/react/24/outline";
+import style from "@/app/ui/events.module.css";
 
 
 // icons
@@ -160,12 +161,12 @@ export function EventsList({filter}: Recs) {
                 </>
                 )}
 
-            <div className="max-w-sm m-auto flex flex-col md:grid md:grid-cols-2 lg:grid-cols-3 md:max-w-none gap-2">
+            <div className={style.card}>
                 {filteredEvents.map(event => (
-                <div key={event.id} className="shadow-xl m-5 relative rounded-xl justify-self-center hover:scale-105 md:w-3/4 lg:w-2/3 ">
+                <div key={event.id} className="shadow-xl m-5 relative rounded-xl justify-self-center hover:scale-105 md:w-3/4 lg:w-3/3 ">
                     <Link href={`/discover/${event.id}`}>
                         <div>
-                            <div className="relative h-[180px] md:h-[200px] lg:h-[300px] overflow-hidden">
+                            <div className="relative h-[180px] md:h-[200px] overflow-hidden">
                                 <Image
                                 src={event.image}
                                 alt={`${event.name} image`}
@@ -176,7 +177,7 @@ export function EventsList({filter}: Recs) {
                             </div>
                             
                             <div className="p-3">
-                                <h3 className="">{event.name}</h3>
+                                <h3 className="truncate">{event.name}</h3>
                                 <p className="truncate">{event.description}</p>
                             </div>
                             <div className="p-1 absolute inset-2 bg-secondary max-h-fit max-w-fit rounded-md">

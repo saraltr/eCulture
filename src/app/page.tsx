@@ -51,8 +51,8 @@ export default async function Home(){
                     </Link>
 
                 </div>
-                <div className="relative hidden lg:block">
-                    <div className="absolute inset-0 lg:bg-gradient-to-r from-white via-transparent to-transparent" style={{ width: '180%' }}></div>
+                <div className=" hidden lg:block">
+                    <div style={{ width: '180%' }}></div>
                     <div className="flex items-center justify-end">
                         <Image
                         src={welcomeImg}

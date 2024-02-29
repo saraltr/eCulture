@@ -10,8 +10,8 @@ interface BannerProps {
 const MainBanner: React.FC<BannerProps> = ({ banner1, banner2, title, desc }) => {
     return (
         <>
-            <section className="relative sm:hidden text-center">
-                <div className=" h-[250px] md:h-[350px] bg-secondary overflow-hidden relative ">
+            <section className="relative sm:hidden text-center overflow-y-hidden">
+                <div className=" h-[250px] md:h-[350px] bg-secondary relative ">
                    <Image
                     src={banner1}
                     alt='eculture banner1'
