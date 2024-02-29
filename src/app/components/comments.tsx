@@ -33,13 +33,13 @@ const CommentForm: React.FC<CommentProps> = ({ eventId }) => {
   return (
     <div>
       <form onSubmit={handleSubmit} className="bg-neutral space-y-4 m-4 p-3">
-        <label htmlFor="comment" className="block">Comment*:</label>
+        <label htmlFor="comment" className="block">Add a Public Comment*:</label>
         <textarea
           id="comment"
           value={comment}
           onChange={(e) => setComment(e.target.value)}
           required
-          placeholder="Add a public comment..."
+          placeholder="Enter comment here..."
           className="mt-1 border-red-50 bg-white  focus:ring-primary focus:border-primary block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
         />
         <div className="flex justify-center">

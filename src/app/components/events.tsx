@@ -28,10 +28,11 @@ const CategoryButton: React.FC<CatBtn> = ({ category, onClick }) => {
 };
 
 interface Recs {
-    filter?: string; 
+    filter?: string[]; 
+    name?: string;
 }
 
-export function EventsList({filter}: Recs) {
+export function EventsList({filter, name}: Recs) {
     const [events, setEvents] = useState<Events[]>([]);
     const [filteredEvents, setFilteredEvents] = useState<Events[]>([]);
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -58,12 +59,16 @@ export function EventsList({filter}: Recs) {
         let filtered = events;
 
         // for recs
-        if (filter) {
-            filtered = events.filter(event => event.category.includes(filter));
+        if (filter && filter.length > 0 && name) {
+            const newEvents = events.filter(event => filter.some(category => event.category.includes(category)) && event.name !== name);
+            console.log(newEvents);
+
+            filtered = newEvents.slice(0,4)
         }
 
         if (searchName.trim() != ""){
             filtered = filtered.filter(event => event.name.toLocaleLowerCase().includes(searchName.toLocaleLowerCase()));
+            filtered.slice(0, 1)
         }
 
         if (searchLocation.trim() !== "") {
@@ -75,7 +80,8 @@ export function EventsList({filter}: Recs) {
         }
 
         setFilteredEvents(filtered);
-    }, [filter, events, searchName, searchLocation, searchDate]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [events, searchName, searchLocation, searchDate]);
 
 
     const filterEvents = (category: string) => {
@@ -335,7 +341,7 @@ export function EventDetail() {
                     <h3 className="bg-primary text-neutral p-2 rounded-md">Recommendations</h3>
                     </div>
                     <div className="">
-                        <EventsList filter={event.category[0]}></EventsList>
+                        <EventsList filter={event.category} name={event.name}></EventsList>
                     </div>
                 </div>
             </section>
