@@ -12,8 +12,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from 'next/navigation';
 import { ExclamationCircleIcon } from "@heroicons/react/24/outline";
-import style from "@/app/ui/events.module.css";
-
 
 // icons
 import { CalendarDaysIcon, ArrowLeftCircleIcon, MapPinIcon } from "@heroicons/react/24/solid";
@@ -161,7 +159,7 @@ export function EventsList({filter}: Recs) {
                 </>
                 )}
 
-            <div className={style.card}>
+            <div className={"max-w-sm m-auto flex flex-col md:grid md:grid-cols-2 md:max-w-full"}>
                 {filteredEvents.map(event => (
                 <div key={event.id} className="shadow-xl m-5 relative rounded-xl justify-self-center hover:scale-105 md:w-3/4 lg:w-3/3 ">
                     <Link href={`/discover/${event.id}`}>
@@ -177,10 +175,10 @@ export function EventsList({filter}: Recs) {
                             </div>
                             
                             <div className="p-3">
-                                <h3 className="truncate">{event.name}</h3>
+                                <h3 className="">{event.name}</h3>
                                 <p className="truncate">{event.description}</p>
                             </div>
-                            <div className="p-1 absolute inset-2 bg-secondary max-h-fit max-w-fit rounded-md">
+                            <div className="p-1 absolute inset-2 bg-secondary max-h-8 max-w-fit rounded-md">
                                 <p className="text-neutral"> 📅Date: {monthDay(event.startDate)}</p>
                             </div>
                             
