@@ -49,8 +49,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 }
             }
             break;
-            case 'POST':
-                const { image, description, username } = req.body;
+        case 'POST':
+                const { image, description, username, likes } = req.body;
 
                 if (!image || !description || !username) {
                     return res.status(400).json({ error: 'Missing image, description, or username' });
@@ -69,13 +69,34 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                         image: image,
                         description: description,
                         name: username,
+                        likes: likes
                     }
                 });
                 res.status(200).json(createdPost);
                 break;
-            default:
-                res.setHeader('Allow', ['GET', 'POST', 'DELETE', 'PUT']);
-                res.status(405).end(`Method ${req.method} Not Allowed`);
+        case 'PUT': 
+        // updates post's likes
+                const { postId, action } = req.body;
+
+                const incrementValue = action === true ? 1 : -1;
+
+                const updateLikes = await prisma.post.update({
+                    where: {
+                        id: Number(postId)
+                    },
+                    data: {
+                        likes: {
+                            increment: incrementValue
+                        } 
+                    }
+                });
+
+                res.status(200).json(updateLikes);
+
+            break;
+        default:
+            res.setHeader('Allow', ['GET', 'POST', 'PUT']);
+            res.status(405).end(`Method ${req.method} Not Allowed`);
         }
     } catch (error) {
         console.error('Error creating product:', error);

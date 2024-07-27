@@ -95,11 +95,12 @@ interface NewPostFormProps {
 export const NewPostForm: React.FC<NewPostFormProps> = ({ username }) => {
     const [image, setImage] = useState("");
     const [description, setDescription] = useState("");
+    const likes = 0;
     const [message, setMessage] = useState<string>("");
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-        const postData = { image, description, username };
+        const postData = { image, description, username, likes };
         // console.log(postData);
 
         try {
@@ -116,33 +117,41 @@ export const NewPostForm: React.FC<NewPostFormProps> = ({ username }) => {
     }
 
     return (
-        <>
-        <h3 className="bg-secondary m-4 text-neutral p-2 rounded-md">Create a New Post</h3>
-        <form onSubmit={handleSubmit}>
-        <div>
-            <label htmlFor="image">Image URL:</label>
-            <input
-            type="text"
-            id="image"
-            value={image}
-            onChange={(e) => setImage(e.target.value)}
-            required
-            />
+      <>
+
+        <div className="collapse collapse-arrow bg-secondary">
+              <input type="checkbox" />
+              <div className="collapse-title text-neutral"><h3>Create a New Post</h3></div>
+              <div className="collapse-content">
+                  <div className="bg-neutral rounded-md">
+                    <form className="" onSubmit={handleSubmit}>
+                    <div>
+                        <label htmlFor="image">Image URL:</label>
+                        <input
+                        type="text"
+                        id="image"
+                        value={image}
+                        onChange={(e) => setImage(e.target.value)}
+                        required
+                        />
+                    </div>
+                    <div>
+                        <label htmlFor="description">Description:</label>
+                        <textarea
+                        id="description"
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                        required
+                        ></textarea>
+                    </div>
+                    <div className="flex justify-center">
+                      <button className="btn my-2 bg-primary hover:bg-secondary text-white w-fit" type="submit">Submit</button>
+                    </div>
+                    
+                    </form>
+                  </div>
+              </div>
         </div>
-        <div>
-            <label htmlFor="description">Description:</label>
-            <textarea
-            id="description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            required
-            ></textarea>
-        </div>
-        <div className="flex justify-center">
-          <button className="btn my-2 bg-primary hover:bg-secondary text-white w-fit" type="submit">Submit</button>
-        </div>
-        
-        </form>
-        </>
+    </>
     );
 };

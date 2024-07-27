@@ -8,6 +8,7 @@ import { NewPostForm } from "../components/posts"
 import { useSession } from "next-auth/react"
 import { CheckConnection } from "@/app/components/connection";
 import UserProfile from "./profile";
+import { NewEventForm } from "./event";
 
 export const User = () => {
 
@@ -74,8 +75,12 @@ export const User = () => {
             <UserProfile username={username}></UserProfile>
         </section>
 
-        <section>
+        <section className="m-5">
             <NewPostForm username={username}></NewPostForm>
+        </section>
+
+        <section>
+            <NewEventForm></NewEventForm>
         </section>
         </>
     );

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Events, Posts, Comments, Comment, Registration, Profile, Post } from "./definitions";
+import { Events, Posts, Comments, Comment, Registration, Profile, Post, Event } from "./definitions";
 import { unstable_noStore as noStore } from 'next/cache';
 
 type ApiResponse<T> = T | { error: string };
@@ -37,6 +37,19 @@ export async function addNewComment(eventId: number, commentData: Comment): Prom
         return response.data;
     } catch (err) {
         return { error: `Error adding comment: ${err}. Please try again later.` };
+    }
+}
+
+// creates new event
+export async function addNewEvent(eventData: Event):
+Promise<ApiResponse<Event>>{
+    noStore();
+    try{
+        const response = await axios.post<Event>(`/api/events`, eventData);
+        return response.data;
+    } catch (err) {
+        console.log(err);
+        return{ error: 'Failed to create new event'}
     }
 }
 
@@ -100,6 +113,16 @@ export async function getProfile(username: string): Promise<ApiResponse<Profile>
     } catch (err) {
         return { error: `Error adding comment: ${err}. Please try again later.` };
     }
+}
+
+export async function updateLikes(postId: number, action: boolean) {
+    noStore();
+    try {
+        const response = await axios.put("/api/posts", {postId, action });
+        return response.data;
+    } catch (err) {
+        return { error: `Error liking the post: ${err}`}
+    } 
 }
 
 export async function deleteRegistration(eventId: number, username: string): Promise<Profile | null> {

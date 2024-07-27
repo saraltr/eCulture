@@ -2,10 +2,10 @@
 // data functions
 import { getEvents, getEventById, registerForEvent } from "@/lib/data"
 import React, { useState, useEffect } from 'react';
-import { useSession } from "next-auth/react"
+import { useSession } from "next-auth/react";
 // data defs types
 import { Events, Registration } from "@/lib/definitions";
-import { formatDate, monthDay } from "@/lib/utils";
+import { formatDate, monthDay, dateHour } from "@/lib/utils";
 import { usePathname } from "next/navigation"
 import CommentForm from "./comments";
 import Image from "next/image";
@@ -149,14 +149,31 @@ export function EventsList({filter, name}: Recs) {
                     <p tabIndex={0} role="button" className=" m-1 btn bg-secondary hover:bg-primary text-white py-2 px-4 rounded-md">Categories ⬇️</p>
                     <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-neutral rounded-box w-52">
                         <li><CategoryButton category="Art" onClick={() => filterEvents("Art")} /></li>
-                        <li><CategoryButton category="Festival" onClick={() => filterEvents("Music")} /></li>
-                        <li><CategoryButton category="Music" onClick={() => filterEvents("Music")} /></li>
-                        <li><CategoryButton category="History" onClick={() => filterEvents("History")} /></li>
-                        <li><CategoryButton category="Celebrations" onClick={() => filterEvents("Celebrations")} /></li>
+                        <li><CategoryButton category="Business" onClick={() => filterEvents("Business")} /></li>
+                        <li><CategoryButton category="Celebration" onClick={() => filterEvents("Celebrations")} /></li>
+                        <li><CategoryButton category="Charity" onClick={() => filterEvents("Charity")} /></li>
+                        <li><CategoryButton category="Comedy" onClick={() => filterEvents("Comedy")} /></li>
                         <li><CategoryButton category="Community" onClick={() => filterEvents("Community")} /></li>
                         <li><CategoryButton category="Crafts" onClick={() => filterEvents("Crafts")} /></li>
-                        <li><CategoryButton category="Food" onClick={() => filterEvents("Food")} /></li>
+                        <li><CategoryButton category="Dance" onClick={() => filterEvents("Dance")} /></li>
+                        <li><CategoryButton category="Education" onClick={() => filterEvents("Education")} /></li>
+                        <li><CategoryButton category="Environment" onClick={() => filterEvents("Environment")} /></li>
                         <li><CategoryButton category="Exhibition" onClick={() => filterEvents("Exhibition")} /></li>
+                        <li><CategoryButton category="Festival" onClick={() => filterEvents("Festival")} /></li>
+                        <li><CategoryButton category="Film" onClick={() => filterEvents("Film")} /></li>
+                        <li><CategoryButton category="Fitness" onClick={() => filterEvents("Fitness")} /></li>
+                        <li><CategoryButton category="Food" onClick={() => filterEvents("Food")} /></li>
+                        <li><CategoryButton category="Gaming" onClick={() => filterEvents("Gaming")} /></li>
+                        <li><CategoryButton category="Health" onClick={() => filterEvents("Health")} /></li>
+                        <li><CategoryButton category="History" onClick={() => filterEvents("History")} /></li>
+                        <li><CategoryButton category="Literature" onClick={() => filterEvents("Literature")} /></li>
+                        <li><CategoryButton category="Music" onClick={() => filterEvents("Music")} /></li>
+                        <li><CategoryButton category="Networking" onClick={() => filterEvents("Networking")} /></li>
+                        <li><CategoryButton category="Science" onClick={() => filterEvents("Science")} /></li>
+                        <li><CategoryButton category="Technology" onClick={() => filterEvents("Technology")} /></li>
+                        <li><CategoryButton category="Theater" onClick={() => filterEvents("Theater")} /></li>
+                        <li><CategoryButton category="Virtual" onClick={() => filterEvents("Virtual")} /></li>
+                        <li><CategoryButton category="Workshops" onClick={() => filterEvents("Workshops")} /></li>  
                     </ul>
                     
                     </div>
@@ -321,9 +338,10 @@ export function EventDetail() {
                         <div className="bg-neutral text-primary p-2">
                             {event.comments.map(comment => (
                             <div key={comment.id} className="mb-4">
-                                <h4 className="font-semibold">{comment.username}</h4>
-                                <p className="text-accent">{comment.createdAt}</p>
+                                <h4 className="font-semibold">@{comment.username}</h4>
+                                <p className="text-accent">{dateHour(comment.createdAt)}</p>
                                 <p className="border-b-2 border-accent">{comment.content}</p>
+
                             </div>
                             ))}
                         </div>

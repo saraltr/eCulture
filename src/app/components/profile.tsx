@@ -1,5 +1,5 @@
 "use client"
-import { getProfile, getEventById, deleteRegistration } from "@/lib/data";
+import { getProfile, getEventById, deleteRegistration, updateLikes } from "@/lib/data";
 import { Profile, Events } from "@/lib/definitions";
 import { useEffect, useState } from "react";
 import Image from "next/image";
@@ -8,6 +8,7 @@ import Link from "next/link";
 const UserProfile: React.FC<{ username: string }> = ({ username }) => {
     const [profile, setProfile] = useState<Profile | null>(null);
     const [error, setError] = useState<string | null>(null);
+    const [liked, setLiked] = useState<{ [key: number]: boolean }>({});
     
 
     useEffect(() => {
@@ -20,7 +21,8 @@ const UserProfile: React.FC<{ username: string }> = ({ username }) => {
                     setProfile(profileInfo);
                 }
             } catch (error) {
-                console.error(error);
+                setError("Internal error. Try again later!")
+                // console.error(error);
             }
         };
 
@@ -28,60 +30,130 @@ const UserProfile: React.FC<{ username: string }> = ({ username }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [profile]);
 
+
+    const handleLikes = async (postId: number | undefined, currentLikes: number | undefined) => {
+
+        if (postId === undefined || currentLikes === undefined) {
+        console.error("ID not valid");
+        return;
+        }
+
+        const action = !liked[postId];
+
+        const result = await updateLikes(postId, action);
+
+        if (result.error) {
+        console.error(result.error);
+    } else {
+        // console.log(result.likes);
+        setLiked((prevLikedPosts => ({
+            ...prevLikedPosts,
+            [postId]: action
+        })));
+    }
+
+    }
+
     if (!profile) {
         return <h3>Loading Profile Info...</h3>;
     }
 
-return (
-    <>
-        {error && <div>Error: {error}</div>}
-        {profile && (
-            <div className="my-5">
-                <h3 className="bg-secondary text-neutral p-2 rounded-md">Your Registered Events</h3>
-                {profile.registrations && profile.registrations.length === 0 ? (
-                    <p>No registered events.</p>
-                ) : (
-                    <div className="flex overflow-x-scroll rounded-md bg-neutral overflow-y-hidden">
-                        {profile.registrations.map((events, index) => (
-                            <RegisteredEvent key={index} eventId={events.eventId} username={username} />
+    const sortedPosts = profile.posts.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+
+    return (
+        <>
+            {error && <div>Error: {error}</div>}
+            {profile && (
+                <div className="my-5">
+                    <h3 className="bg-secondary text-neutral p-2 rounded-md">Your Registered Events</h3>
+                    {profile.registrations && profile.registrations.length === 0 ? (
+                        <p>No registered events.</p>
+                    ) : (
+                        <div className="flex overflow-x-scroll rounded-md bg-neutral overflow-y-hidden">
+                            {profile.registrations.map((events, index) => (
+                                <RegisteredEvent key={index} eventId={events.eventId} username={username} />
+                            ))}
+                        </div>
+                    )}
+                </div>
+                )}
+
+                <div className="my-4">
+                    <h3 className="bg-secondary text-neutral p-2 rounded-md">Your Posts</h3>
+                    <div className="my-2 grid grid-cols-2 md:grid-cols-3 gap-1">
+                        {profile && sortedPosts.map((post, index) => (
+                            <div key={index} className="relative overflow-hidden rounded-md bg-gray-50">
+                                <div className="w-full h-56 relative">
+                                    <Image
+                                        src={post.image}
+                                        alt={`${post.id}'s post image`}
+                                        layout="fill"
+                                        objectFit="cover"
+                                        className="rounded-t-md" 
+                                    />
+                                </div>
+                                <div className="p-2 rounded-b-md">
+                                    <div className="flex items-center">
+
+                                        <button type="button" className="btn flex  btn-outline text-white bg-gradient-to-r from-red-700 to-red-900 hover:bg-gradient-to-l focus:ring-2 focus:outline-none focus:gray-50 rounded-lg text-center px-2 py-2"
+                                        onClick={() => handleLikes(post.id, post.likes)}> {liked[post.id] ? 'Unlike' : 'Like'}
+                                            <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                className="h-6 w-6"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke="currentColor">
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth="2"
+                                                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                                            </svg>
+                                            
+                                        </button>
+                                        <p className="ml-2">{post.likes} Likes</p>
+                                    </div>
+                                    <p className="mt-2">
+                                        <span className="font-bold">@{username}:</span> <span className="text-accent">{post.description}</span>
+                                    </p>
+                                    <p className="text-gray-400 font-light text-xs my-2">{new Date(post.createdAt).toLocaleDateString('en-US', { 
+                                        year: 'numeric', 
+                                        month: 'numeric', 
+                                        day: 'numeric', 
+                                        hour: 'numeric',
+                                        minute: 'numeric'
+                                        })}
+                                    </p>
+                                </div>
+                                
+                                
+                            </div>
                         ))}
                     </div>
-                )}
-            </div>
-            )}
-            <div className="my-2">
-                <h3 className="bg-secondary text-neutral p-2 rounded-md">Your Comments</h3>
-                <div className="bg-neutral">
-                    {profile && profile.comments.map((comment, index) => (
-                    <div key={index} className="border-b-2 border-accent">
-                        <p className="m-2">{comment.content}</p>
-                        {/* <p>Event ID: {comment.eventId}</p> */}
-                    </div>
-                ))}
                 </div>
-                
-            </div>
 
-            <div className="my-4">
-                <h3 className="bg-secondary text-neutral p-2 rounded-md">Your Posts</h3>
-                <div className="max-w-sm m-auto flex flex-col md:grid md:grid-cols-2 lg:grid-cols-3 md:max-w-none gap-2">
-                    {profile && profile.posts.map((post, index) => (
-                    <div key={index} className="shadow-xl m-5 p-3 relative rounded-xl justify-self-center md:w-3/4 lg:w-2/3 ">
-                        <Image
-                        src={post.image}
-                        alt={`${post.id}'s post image`}
-                        width={100}
-                        height={100}
-                        layout="responsive"
-                        >
-                        </Image>
-                        <p className="text-center">{post.description}</p>
+                <div className="collapse collapse-arrow bg-secondary">
+                    <input type="checkbox" />
+                    <div className="collapse-title text-neutral"><h3>Comments</h3></div>
+                    <div className="collapse-content">
+                        <div className="bg-neutral rounded-md">
+                        {profile && profile.comments.map((comment, index) => (
+                        <div key={index} className="border-b-2 border-accent">
+                            <p className="mt-2">
+                                <span className="font-bold mr-1">
+                                    @{comment.username}:  
+                                </span>
+                                <span className="text-accent">
+                                    {comment.content}
+                                </span>
+                            </p>
+                            {/* <p>Event ID: {comment.eventId}</p> */}
+                        </div>
+                    ))}
                     </div>
-                ))}
+                    </div>
                 </div>
-                
-            </div>
-    </>
+        </>
     );
 }
 
@@ -122,7 +194,7 @@ const RegisteredEvent = ({ eventId, username }: EventDetailProps) => {
 
                 if(updated){
                     const response = await deleteRegistration(eventId, username);
-                    console.log(response);
+                    //console.log(response);
                     setEvent(eventData);
                     setupdated(false);
                 }

@@ -61,3 +61,14 @@ export type Profile = {
   posts:  Posts[];
   registrations: Registration[];
 }
+
+export type Event = {
+  name: string;
+  description: string;
+  location: string;
+  startDate: Date;
+  endDate: Date;
+  image: string;
+  category: string[]
+  likes: number | null;
+}

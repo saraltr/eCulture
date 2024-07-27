@@ -15,6 +15,22 @@ export const monthDay = (dateString: string) => {
   return `${month} ${day}`;
 }
 
+export const dateHour = (dateString: string) => {
+  const date = new Date(dateString);
+
+    if (!isNaN(date.getTime())) {
+        return date.toLocaleDateString('en-US', { 
+          year: 'numeric', 
+          month: 'numeric', 
+          day: 'numeric', 
+          hour: 'numeric',
+          minute: 'numeric'
+        });
+    } else {
+        return 'Invalid Date';
+    }
+}
+
 
 export function getParam(param: string){
   const queryString = window.location.search;
