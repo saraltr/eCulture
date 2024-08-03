@@ -4,12 +4,11 @@ import { Profile, Events } from "@/lib/definitions";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import LikeButton from "./likeButton";
 
 const UserProfile: React.FC<{ username: string }> = ({ username }) => {
     const [profile, setProfile] = useState<Profile | null>(null);
     const [error, setError] = useState<string | null>(null);
-    const [liked, setLiked] = useState<{ [key: number]: boolean }>({});
-    
 
     useEffect(() => {
         const fetchProfile = async () => {
@@ -21,38 +20,13 @@ const UserProfile: React.FC<{ username: string }> = ({ username }) => {
                     setProfile(profileInfo);
                 }
             } catch (error) {
-                setError("Internal error. Try again later!")
-                // console.error(error);
+                setError("Internal error. Try again later!");
             }
         };
 
         fetchProfile();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [profile]);
-
-
-    const handleLikes = async (postId: number | undefined, currentLikes: number | undefined) => {
-
-        if (postId === undefined || currentLikes === undefined) {
-        console.error("ID not valid");
-        return;
-        }
-
-        const action = !liked[postId];
-
-        const result = await updateLikes(postId, action);
-
-        if (result.error) {
-        console.error(result.error);
-    } else {
-        // console.log(result.likes);
-        setLiked((prevLikedPosts => ({
-            ...prevLikedPosts,
-            [postId]: action
-        })));
-    }
-
-    }
+    }, [username]);
 
     if (!profile) {
         return <h3>Loading Profile Info...</h3>;
@@ -76,87 +50,71 @@ const UserProfile: React.FC<{ username: string }> = ({ username }) => {
                         </div>
                     )}
                 </div>
-                )}
+            )}
 
-                <div className="my-4">
-                    <h3 className="bg-secondary text-neutral p-2 rounded-md">Your Posts</h3>
-                    <div className="my-2 grid grid-cols-2 md:grid-cols-3 gap-1">
-                        {profile && sortedPosts.map((post, index) => (
-                            <div key={index} className="relative overflow-hidden rounded-md bg-gray-50">
-                                <div className="w-full h-56 relative">
-                                    <Image
-                                        src={post.image}
-                                        alt={`${post.id}'s post image`}
-                                        layout="fill"
-                                        objectFit="cover"
-                                        className="rounded-t-md" 
+            <div className="my-4">
+                <h3 className="bg-secondary text-neutral p-2 rounded-md">Your Posts</h3>
+                <div className="my-2 grid grid-cols-2 md:grid-cols-3 gap-1">
+                    {profile && sortedPosts.map((post, index) => (
+                        <div key={index} className="relative overflow-hidden rounded-md bg-gray-50">
+                            <div className="w-full h-56 relative">
+                                <Image
+                                    src={post.image}
+                                    alt={`${post.id}'s post image`}
+                                    layout="fill"
+                                    objectFit="cover"
+                                    className="rounded-t-md"
+                                />
+                            </div>
+                            <div className="p-2 rounded-b-md">
+                                <div className="flex items-center">
+                                    <LikeButton 
+                                        postId={post.id} 
+                                        initialLikes={post.likes ?? 0}
+                                        isLiked={false} 
                                     />
                                 </div>
-                                <div className="p-2 rounded-b-md">
-                                    <div className="flex items-center">
-
-                                        <button type="button" className="btn flex  btn-outline text-white bg-gradient-to-r from-red-700 to-red-900 hover:bg-gradient-to-l focus:ring-2 focus:outline-none focus:gray-50 rounded-lg text-center px-2 py-2"
-                                        onClick={() => handleLikes(post.id, post.likes)}> {liked[post.id] ? 'Unlike' : 'Like'}
-                                            <svg
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                className="h-6 w-6"
-                                                fill="none"
-                                                viewBox="0 0 24 24"
-                                                stroke="currentColor">
-                                                <path
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    strokeWidth="2"
-                                                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                                            </svg>
-                                            
-                                        </button>
-                                        <p className="ml-2">{post.likes} Likes</p>
-                                    </div>
-                                    <p className="mt-2">
-                                        <span className="font-bold">@{username}:</span> <span className="text-accent">{post.description}</span>
-                                    </p>
-                                    <p className="text-gray-400 font-light text-xs my-2">{new Date(post.createdAt).toLocaleDateString('en-US', { 
-                                        year: 'numeric', 
-                                        month: 'numeric', 
-                                        day: 'numeric', 
+                                <p className="mt-2">
+                                    <span className="font-bold">@{username}:</span> <span className="text-accent">{post.description}</span>
+                                </p>
+                                <p className="text-gray-400 font-light text-xs my-2">
+                                    {new Date(post.createdAt).toLocaleDateString('en-US', {
+                                        year: 'numeric',
+                                        month: 'numeric',
+                                        day: 'numeric',
                                         hour: 'numeric',
                                         minute: 'numeric'
-                                        })}
-                                    </p>
-                                </div>
-                                
-                                
+                                    })}
+                                </p>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+            <div className="collapse collapse-arrow bg-secondary">
+                <input type="checkbox" />
+                <div className="collapse-title text-neutral"><h3>Comments</h3></div>
+                <div className="collapse-content">
+                    <div className="bg-neutral rounded-md">
+                        {profile && profile.comments.map((comment, index) => (
+                            <div key={index} className="border-b-2 border-accent">
+                                <p className="mt-2">
+                                    <span className="font-bold mr-1">
+                                        @{comment.username}:
+                                    </span>
+                                    <span className="text-accent">
+                                        {comment.content}
+                                    </span>
+                                </p>
                             </div>
                         ))}
                     </div>
                 </div>
-
-                <div className="collapse collapse-arrow bg-secondary">
-                    <input type="checkbox" />
-                    <div className="collapse-title text-neutral"><h3>Comments</h3></div>
-                    <div className="collapse-content">
-                        <div className="bg-neutral rounded-md">
-                        {profile && profile.comments.map((comment, index) => (
-                        <div key={index} className="border-b-2 border-accent">
-                            <p className="mt-2">
-                                <span className="font-bold mr-1">
-                                    @{comment.username}:  
-                                </span>
-                                <span className="text-accent">
-                                    {comment.content}
-                                </span>
-                            </p>
-                            {/* <p>Event ID: {comment.eventId}</p> */}
-                        </div>
-                    ))}
-                    </div>
-                    </div>
-                </div>
+            </div>
         </>
     );
-}
-
+};
 
 interface EventDetailProps {
     eventId: number;

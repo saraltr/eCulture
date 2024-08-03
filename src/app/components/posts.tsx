@@ -2,9 +2,13 @@
 import { getPosts, addNewPost, getMostLiked } from "@/lib/data"
 import { Posts } from "@/lib/definitions";
 import React, { useState, useEffect, FormEvent } from 'react';
+import LikeButton from "./likeButton";
+import Pagination from "./pagination";
 
 export function PostList() {
     const [posts, setPosts] = useState<Posts[]>([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const postsPerPage = 12;
 
     useEffect(() => {
         const fetchEvents = async () => {
@@ -19,6 +23,11 @@ export function PostList() {
         fetchEvents();
     }, []);
 
+    const indexOfLastPost = currentPage * postsPerPage;
+    const indexOfFirstPost = indexOfLastPost - postsPerPage;
+    const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
+    const totalPages = Math.ceil(posts.length / postsPerPage);
+
     if (!posts) {
         return <div>Loading Posts...</div>;
     }
@@ -27,13 +36,34 @@ export function PostList() {
       <div className="container mx-auto px-4 py-8">
       <h2 className="text-3xl font-semibold mb-4">Recent Posts</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-        {posts.length > 0 ? (
-          posts.map(post => (
+        {currentPosts.length > 0 ? (
+          currentPosts.map(post => (
             <div key={post.id} className="bg-white rounded-lg shadow-md overflow-hidden">
               <img loading="lazy" src={post.image} alt={post.description} className="w-full h-40 object-cover object-center" />
               <div className="p-4">
+
+                <div className="flex items-center">
+
+                 <LikeButton 
+                    postId={post.id} 
+                    initialLikes={post.likes ?? 0}
+                    isLiked={false} 
+                /> 
+                </div>
+                
                 <p className="text-primary text-lg font-semibold mb-2">{post.description}</p>
                 <p className="text-accent">Posted by: {post.name}</p>
+
+                <p className="text-gray-400 font-light text-xs my-2">
+                    {new Date(post.createdAt).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'numeric',
+                        day: 'numeric',
+                        hour: 'numeric',
+                        minute: 'numeric'
+                    })}
+                </p>
+                
               </div>
             </div>
           ))
@@ -41,6 +71,13 @@ export function PostList() {
           <p className="text-gray-800">No recent posts found</p>
         )}
       </div>
+
+        <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+        />
+
     </div>
 
     );
@@ -74,6 +111,14 @@ export function MostLiked() {
             <div key={post.id} className="bg-white rounded-lg shadow-md overflow-hidden">
               <img loading="lazy" src={post.image} alt={`Post ${post.id} by ${post.name}`} className="w-full h-40 object-cover object-center" />
               <div className="p-4">
+                <div className="flex items-center">
+
+                 <LikeButton 
+                    postId={post.id} 
+                    initialLikes={post.likes ?? 0}
+                    isLiked={false} 
+                /> 
+                </div>
                 <p className="text-primary text-lg font-semibold mb-2">{post.description}</p>
                 <p className="text-accent">Posted by: {post.name}</p>
               </div>

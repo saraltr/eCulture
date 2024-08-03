@@ -12,6 +12,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from 'next/navigation';
 import { ExclamationCircleIcon } from "@heroicons/react/24/outline";
+import Pagination from "./pagination";
 
 // icons
 import { CalendarDaysIcon, ArrowLeftCircleIcon, MapPinIcon } from "@heroicons/react/24/solid";
@@ -233,35 +234,13 @@ export function EventsList({filter, name}: Recs) {
 
             {/* pagination */}
 
-            {!filter && !name && (
-            <div className="join flex justify-center mt-4">
-                <button
-                    className="join-item btn px-3 py-1 mx-1 bg-primary text-white rounded disabled:opacity-50"
-                    onClick={() => setCurrentPage(prevPage => Math.max(prevPage - 1, 1))}
-                    disabled={currentPage === 1}
-                >
-                    Previous
-                </button>
-
-                {Array.from({ length: totalPages }, (_, index) => (
-                    <button
-                        key={index + 1}
-                        onClick={() => setCurrentPage(index + 1)}
-                        className={`px-3 py-1 mx-1 rounded ${currentPage === index + 1 ? 'bg-secondary text-white' : 'bg-neutral text-black'}`}
-                    >
-                        {index + 1}
-                    </button>
-                ))}
-
-                <button
-                    onClick={() => setCurrentPage(prevPage => Math.min(prevPage + 1, totalPages))}
-                    disabled={currentPage === totalPages}
-                    className="btn px-3 py-1 mx-1 bg-primary text-white rounded disabled:opacity-50"
-                >
-                    Next
-                </button>
-            </div>
-            )}
+        {!filter && !name && (
+        <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+        />
+        )}
 
         </section>
     );
