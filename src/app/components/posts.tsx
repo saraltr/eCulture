@@ -72,7 +72,7 @@ export function MostLiked() {
         {posts.length > 0 ? (
           posts.map(post => (
             <div key={post.id} className="bg-white rounded-lg shadow-md overflow-hidden">
-              <img loading="lazy" src={post.image} alt={post.description} className="w-full h-40 object-cover object-center" />
+              <img loading="lazy" src={post.image} alt={`Post ${post.id} by ${post.name}`} className="w-full h-40 object-cover object-center" />
               <div className="p-4">
                 <p className="text-primary text-lg font-semibold mb-2">{post.description}</p>
                 <p className="text-accent">Posted by: {post.name}</p>

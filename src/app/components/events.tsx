@@ -191,7 +191,7 @@ export function EventsList({filter, name}: Recs) {
                 </>
                 )}
 
-            <div className={"max-w-sm m-auto flex flex-col md:grid md:grid-cols-3 md:max-w-full"}>
+            <div className={"max-w-sm m-auto flex flex-col md:grid md:grid-cols-2 lg:grid-cols-3 md:max-w-full"}>
                 
                 {currentEvents.map(event => (
                 <div key={event.id} className="shadow-xl m-5 relative rounded-xl justify-self-center hover:scale-105 md:w-3/4 lg:w-3/3 ">
