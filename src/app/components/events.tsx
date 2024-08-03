@@ -39,6 +39,8 @@ export function EventsList({filter, name}: Recs) {
     const [searchLocation, setSearchLocation] = useState<string>("");
     const [searchName, setSearchName] = useState<string>("");
     const [searchDate, setSearchDate] = useState<string>("");
+    const [currentPage, setCurrentPage] = useState(1);
+    const eventsPerPage = 9;
 
 
     useEffect(() => {
@@ -61,7 +63,7 @@ export function EventsList({filter, name}: Recs) {
         // for recs
         if (filter && filter.length > 0 && name) {
             const newEvents = events.filter(event => filter.some(category => event.category.includes(category)) && event.name !== name);
-            console.log(newEvents);
+            // console.log(newEvents);
 
             filtered = newEvents.slice(0,4)
         }
@@ -80,8 +82,14 @@ export function EventsList({filter, name}: Recs) {
         }
 
         setFilteredEvents(filtered);
+        setCurrentPage(1);
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [events, searchName, searchLocation, searchDate]);
+
+    const indexOfLastEvent = currentPage * eventsPerPage;
+    const indexOfFirstEvent = indexOfLastEvent - eventsPerPage;
+    const currentEvents = filteredEvents.slice(indexOfFirstEvent, indexOfLastEvent);
+    const totalPages = Math.ceil(filteredEvents.length / eventsPerPage);
 
 
     const filterEvents = (category: string) => {
@@ -92,6 +100,7 @@ export function EventsList({filter, name}: Recs) {
             const filteredEvents = events.filter(event => event.category.includes(category));
             setFilteredEvents(filteredEvents);
         }
+        setCurrentPage(1);
     };
 
 
@@ -145,8 +154,8 @@ export function EventsList({filter, name}: Recs) {
                         <CategoryButton category="All Events" onClick={() => filterEvents("All")} />
                     </div>
                 
-                    <div className="dropdown dropdown-hover">
-                    <p tabIndex={0} role="button" className=" m-1 btn bg-secondary hover:bg-primary text-white py-2 px-4 rounded-md">Categories ⬇️</p>
+                    <div className="dropdown dropdown-right ">
+                    <p tabIndex={0} role="button" className=" m-1 btn bg-secondary hover:bg-primary text-white py-2 px-4 rounded-md">Categories ➡️</p>
                     <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-neutral rounded-box w-52">
                         <li><CategoryButton category="Art" onClick={() => filterEvents("Art")} /></li>
                         <li><CategoryButton category="Business" onClick={() => filterEvents("Business")} /></li>
@@ -182,8 +191,9 @@ export function EventsList({filter, name}: Recs) {
                 </>
                 )}
 
-            <div className={"max-w-sm m-auto flex flex-col md:grid md:grid-cols-2 md:max-w-full"}>
-                {filteredEvents.map(event => (
+            <div className={"max-w-sm m-auto flex flex-col md:grid md:grid-cols-3 md:max-w-full"}>
+                
+                {currentEvents.map(event => (
                 <div key={event.id} className="shadow-xl m-5 relative rounded-xl justify-self-center hover:scale-105 md:w-3/4 lg:w-3/3 ">
                     <Link href={`/discover/${event.id}`}>
                         <div>
@@ -219,7 +229,40 @@ export function EventsList({filter, name}: Recs) {
                 </div>
             ))}
 
-            </div>    
+            </div> 
+
+            {/* pagination */}
+
+            {!filter && !name && (
+            <div className="join flex justify-center mt-4">
+                <button
+                    className="join-item btn px-3 py-1 mx-1 bg-primary text-white rounded disabled:opacity-50"
+                    onClick={() => setCurrentPage(prevPage => Math.max(prevPage - 1, 1))}
+                    disabled={currentPage === 1}
+                >
+                    Previous
+                </button>
+
+                {Array.from({ length: totalPages }, (_, index) => (
+                    <button
+                        key={index + 1}
+                        onClick={() => setCurrentPage(index + 1)}
+                        className={`px-3 py-1 mx-1 rounded ${currentPage === index + 1 ? 'bg-secondary text-white' : 'bg-neutral text-black'}`}
+                    >
+                        {index + 1}
+                    </button>
+                ))}
+
+                <button
+                    onClick={() => setCurrentPage(prevPage => Math.min(prevPage + 1, totalPages))}
+                    disabled={currentPage === totalPages}
+                    className="btn px-3 py-1 mx-1 bg-primary text-white rounded disabled:opacity-50"
+                >
+                    Next
+                </button>
+            </div>
+            )}
+
         </section>
     );
 }
