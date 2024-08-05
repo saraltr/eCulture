@@ -138,26 +138,49 @@ interface NewPostFormProps {
 }
 
 export const NewPostForm: React.FC<NewPostFormProps> = ({ username }) => {
-    const [image, setImage] = useState("");
+    const [file, setFile] = useState<File | null>(null);
     const [description, setDescription] = useState("");
     const likes = 0;
     const [message, setMessage] = useState<string>("");
 
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (e.target.files && e.target.files.length > 0) {
+        setFile(e.target.files[0]);
+      }
+    };
+
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-        const postData = { image, description, username, likes };
-        // console.log(postData);
+
+      if (!file || !description) {
+        setMessage("Please fill out all fields");
+        return;
+      }
+
+      const formData = new FormData();
+        formData.append('file', file);
+        formData.append('description', description);
+        formData.append('username', username);
+        
+        // console.log(formData);
 
         try {
-            const response = await addNewPost(postData);
-            setMessage("Post created!")
+            const response = await fetch("/api/posts", {
+              method: "POST",
+              body: formData
+            })
 
+            if (response.ok) {
+              setMessage("Post created successfully")
+              setFile(null);
+              setDescription("");
+            } else {
+              setMessage("Error creating post. Try again later.");
+            }
         } catch (error) {
-            setMessage("Error registering for the event. Try again later.");
+            console.error(error);
+            setMessage("Error creating post. Try again later.");
         }
-
-        setImage("");
-        setDescription("");
         
     }
 
@@ -171,12 +194,11 @@ export const NewPostForm: React.FC<NewPostFormProps> = ({ username }) => {
                   <div className="bg-neutral rounded-md">
                     <form className="" onSubmit={handleSubmit}>
                     <div>
-                        <label htmlFor="image">Image URL:</label>
+                        <label htmlFor="postFile">Image:</label>
                         <input
-                        type="text"
-                        id="image"
-                        value={image}
-                        onChange={(e) => setImage(e.target.value)}
+                        type="file"
+                        id="postFile"
+                        onChange={handleFileChange}
                         required
                         />
                     </div>
@@ -192,7 +214,9 @@ export const NewPostForm: React.FC<NewPostFormProps> = ({ username }) => {
                     <div className="flex justify-center">
                       <button className="btn my-2 bg-primary hover:bg-secondary text-white w-fit" type="submit">Submit</button>
                     </div>
-                    
+                    <div className="">
+                      {message && <p>{message}</p>}
+                    </div>
                     </form>
                   </div>
               </div>

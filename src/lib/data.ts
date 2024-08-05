@@ -68,6 +68,7 @@ export async function registerForEvent(eventId: number, registerStatus: Registra
     }
 }
 
+// get all posts
 export async function getPosts(): Promise<Posts[]> {
     noStore();
     try {
@@ -79,6 +80,7 @@ export async function getPosts(): Promise<Posts[]> {
     }
 }
 
+// most liked posts
 export async function getMostLiked() {
     noStore();
     try {
@@ -94,6 +96,7 @@ export async function getMostLiked() {
     }
 };
 
+// add new post
 export async function addNewPost(postData: Post): Promise<ApiResponse<Post>> {
     noStore();
     try {
@@ -105,6 +108,8 @@ export async function addNewPost(postData: Post): Promise<ApiResponse<Post>> {
     }
 }
 
+
+// get logged profile
 export async function getProfile(username: string): Promise<ApiResponse<Profile>> {
     noStore();
     try {
@@ -115,6 +120,7 @@ export async function getProfile(username: string): Promise<ApiResponse<Profile>
     }
 }
 
+// to add likes
 export async function updateLikes(postId: number, action: boolean) {
     noStore();
     try {
@@ -125,6 +131,7 @@ export async function updateLikes(postId: number, action: boolean) {
     } 
 }
 
+// remove event registration
 export async function deleteRegistration(eventId: number, username: string): Promise<Profile | null> {
     noStore();
     try {
