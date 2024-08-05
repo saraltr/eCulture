@@ -87,7 +87,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             const { fields, files } = await parseForm(req);
 
             const file = (files.file instanceof Array ? files.file[0] : files.file) as formidable.File;
-            const description = Array.isArray(fields.description) ? fields.description[0] : fields.description;
+            const description = Array.isArray(fields.description) ? fields.description[0] : fields.description || "";
             const username = Array.isArray(fields.username) ? fields.username[0] : fields.username;
             const likes = Array.isArray(fields.likes) ? Number(fields.likes[0]) : Number(fields.likes);
 
@@ -106,7 +106,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 const createdPost = await prisma.post.create({
                     data: {
                         image: `/posts/${file.newFilename}`,
-                        description,
+                        description: description as string,
                         name: username,
                         likes: isNaN(likes) ? 0 : likes,
                     }
