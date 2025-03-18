@@ -68,11 +68,11 @@ const UserProfile: React.FC<{ username: string }> = ({ username }) => {
                             </div>
                             <div className="p-2 rounded-b-md">
                                 <div className="flex items-center">
-                                    <LikeButton 
+                                    {/* <LikeButton 
                                         postId={post.id} 
                                         initialLikes={post.likes ?? 0}
                                         isLiked={false} 
-                                    />
+                                    /> */}
                                 </div>
                                 <p className="mt-2">
                                     <span className="font-bold">@{username}:</span> <span className="text-accent">{post.description}</span>

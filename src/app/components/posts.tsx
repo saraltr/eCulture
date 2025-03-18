@@ -44,11 +44,11 @@ export function PostList() {
 
                 <div className="flex items-center">
 
-                 <LikeButton 
+                 {/* <LikeButton 
                     postId={post.id} 
                     initialLikes={post.likes ?? 0}
                     isLiked={false} 
-                /> 
+                />  */}
                 </div>
                 
                 <p className="text-primary text-lg font-semibold mb-2">{post.description}</p>
