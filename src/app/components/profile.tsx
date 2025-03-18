@@ -162,7 +162,7 @@ const RegisteredEvent = ({ eventId, username }: EventDetailProps) => {
             }
         }; 
             fetchEvent();
-    }, [eventId, event, updated, username]);    
+    }, [eventId, updated, username]);    
 
 
     if (!event) {
